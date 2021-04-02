@@ -1,0 +1,684 @@
+Importo il dataset, salvato come "dataset.csv" e rinomino le righe:  
+  
+```{r}
+library(readr)
+library(plyr)
+library(dplyr)
+dataset <- read_csv("dataset.csv")
+names <- as.character(dataset$`Gene ID`)
+dataset <- dataset %>% select (-X1, -`Gene ID`)
+rownames(dataset) <- names
+dataset <- dataset[ , order(colnames(dataset)) ]
+dataset <- dataset[ , which( !duplicated( t( dataset ) ) ) ]
+#Qui tolgo i sample che si riferiscono a fibroblasti e non cellule staminali
+dataset <- dataset %>% select(- Sample99, - Sample149, - Sample156, -Sample129, -Sample223)
+t_dataset <- t(dataset)
+```
+
+Importo la LUT, in cui ai sample sono associate diverse caratteristiche:
+
+```{r}
+library(readr)
+library(dplyr)
+sample_to_info <- read_delim("sample_to_info.csv", ";", escape_double = FALSE, trim_ws = TRUE)
+lookup <- sample_to_info %>% mutate(presente = is.element(sample_to_info$SampleID, colnames(dataset))) %>% filter(presente == 'TRUE') %>% select(-presente)
+lookup <- lookup[ order(lookup$SampleID), ]
+lookup$`Source name` <- iconv(lookup$`Source name`, to = "ASCII//TRANSLIT")
+lookup <- lookup %>% mutate(Tissue = revalue(iconv(`Source name`, to = "ASCII//TRANSLIT"), c(
+    "Primed H9 hESC" = "ESC",
+    "Re-Primed WIBR3 hESC" = "ESC",
+    "undifferentiated H9 Human embryonic stem cells replicate 2" = "ESC",
+    "undifferentiated primary foreskin fibroblast derived induced pluripotent stem cell line 1" = "neonatal fibroblast",
+    "Human umbilical cord blood CD34+CD45+ cells" = "cord blood",
+    "undifferentiated BJ-TERT derived induced pluripotent stem cell line 28 replicate 1" = "neonatal fibroblast",
+    "Naive WIBR3 hESC" = "ESC",
+    "AD-specific iPSC7" = "AD specific fibroblast",
+    "Naive WIS2 Hesc" = "ESC",
+    "Naive BGO1 hESC" = "ESC",
+    "Naive H1 hESC" = "ESC",
+    "Naive C2 hiPSC" = "adult fibroblast",
+    "Naive C1 hiPSC" = "adult fibroblast",
+    "Naive Wis1 hESC" = "ESC",
+    "Naive H9 hESC" = "ESC",
+    "undifferentiated BJ-TERT derived induced pluripotent stem cell line 28 replicate 2" = "neonatal fibroblast",
+    "AD-specific iPSC1" = "AD specific fibroblast",
+    "iPSCs derived from human adult fibroblasts" = "adult fibroblast",
+    "hESC" = "ESC",
+    "iPSCs derived from human cord blood CD34+CD45+ cells" = "cord blood",
+    "undifferentiated H9 Human embryonic stem cells replicate 1" = "ESC",
+    "iPSCs derived from human adult dermal fibroblasts" = "adult fibroblast",
+    "undifferentiated BJ-TERT derived induced pluripotent stem cell line 29" = "neonatal fibroblast",
+    "undifferentiated H9 Human embryonic stem cells replicate 3" = "ESC",
+    "Primed WIBR3 hESC" = "ESC"
+)))
+unique(lookup$Tissue)
+
+lookup <- lookup %>% dplyr::mutate(Tissue1 = case_when(
+    Title == "iPSB_KM_rep1" ~ "embryonic liver",
+    Title == "iPSB_p23_rep1"~ "embryonic liver",
+    Title == "iPSC_KM_rep1" ~ "embryonic liver",
+    Title == "iPSA_KM_rep1" ~ "embryonic liver",
+    Title == "iPSA_p24_rep1"~ "embryonic liver",
+    Title == "iPSC_p19_rep1"~ "embryonic liver",
+    Title == "FLiPSC_p12_rep1"~ "fetal liver",
+    Title == "FLiPSC_p23_rep1"~ "fetal liver"))
+index <- !is.na(lookup$Tissue1)
+lookup$Tissue[index] <- lookup$Tissue1[index]
+lookup <- lookup %>% select(- Tissue1)
+```
+
+Creo un dataset scalato per sample:
+
+```{r}
+t_scale_dataset <- t(scale(dataset))
+```
+
+Creo un dataset scalato per esperimento:
+
+```{r}
+library(readr)
+library(dplyr)
+t_dataset_temp <- as.data.frame(t_dataset)
+t_dataset_temp<- cbind(t_dataset_temp, experiment = lookup$Series) 
+GSE95502 <- t_dataset_temp %>% filter(experiment == "GSE95502") %>% select(- experiment) %>% scale() %>% as.data.frame()
+GSE21244 <- t_dataset_temp %>% filter(experiment == "GSE21244") %>% select(- experiment)  %>% scale() %>% as.data.frame()
+GSE62066 <- t_dataset_temp %>% filter(experiment == "GSE62066") %>% select(- experiment) %>% scale() %>% as.data.frame()
+GSE46872 <- t_dataset_temp %>% filter(experiment == "GSE46872") %>% select(- experiment) %>% scale() %>% as.data.frame()
+GSE31163 <- t_dataset_temp %>% filter(experiment == "GSE31163") %>% select(- experiment) %>% scale() %>% as.data.frame()
+GSE26946 <- t_dataset_temp %>% filter(experiment == "GSE26946") %>% select(- experiment) %>% scale() %>% as.data.frame()
+t_dataset_scalebyexp <- rbind(GSE95502, GSE21244, GSE26946, GSE31163, GSE46872, GSE62066)
+
+#riordino i labels in ordine alfabetico 
+
+t_dataset_scalebyexp <- t_dataset_scalebyexp [ order ( row.names ( t_dataset_scalebyexp )), ]
+t_dataset_scalebyexp <- as.matrix(t_dataset_scalebyexp)
+t_dataset_scalebyexp_tissue <- t_dataset_scalebyexp
+rownames(t_dataset_scalebyexp_tissue) <- lookup %>% select(Tissue) %>% unlist
+```
+
+Ora creo dei dataset trasposti in cui i nomi delle righe non si riferiscono al nome del sample ma all'esperimento da cui il sample proviene (_experiment) oppure al tipo di sample (_source; _tissue)
+
+```{r}
+t_dataset_experiment <- t_dataset
+rownames(t_dataset_experiment) <- lookup$Series
+t_dataset_source <-t_dataset
+rownames(t_dataset_source) <- lookup$`Source name`
+t_dataset_tissue <-t_dataset
+rownames(t_dataset_tissue) <- lookup$Tissue
+
+t_scale_dataset_experiment <- t_scale_dataset
+rownames(t_scale_dataset_experiment) <- lookup$Series
+t_scale_dataset_source <- t_scale_dataset
+rownames(t_scale_dataset_source) <- lookup$`Source name`
+t_scale_dataset_tissue <-t_scale_dataset
+rownames(t_scale_dataset_tissue) <- lookup$Tissue
+
+t_dataset_scalebyexp_experiment <- t_dataset_scalebyexp
+rownames(t_dataset_scalebyexp_experiment) <- lookup$Series
+t_dataset_scalebyexp_source <- t_dataset_scalebyexp
+rownames(t_dataset_scalebyexp_source) <- lookup$`Source name`
+t_dataset_scalebyexp__tissue <-t_dataset_scalebyexp
+rownames(t_dataset_scalebyexp_tissue) <- lookup$Tissue
+```
+
+Istogrammi di medie e deviazioni standard per riga e per colonna sul dataset non scalato:
+
+```{r}
+hist(apply(dataset, 1, mean))
+hist(apply(dataset, 2, mean), breaks = seq(5.5, 8, 0.01))
+hist(apply(dataset, 1, sd))
+hist(apply(dataset, 2, sd))
+```
+
+Ora faccio dendrogrammi e PCA per il DATASET NON SCALATO usando gli esperimenti come label:
+
+```{r}
+library(factoextra)
+eu_dataset <- dist(t_dataset_experiment, method='euclidean')
+hc_single <- hclust(eu_dataset, method='single') # for single linkage
+hc_complete <- hclust(eu_dataset, method='complete') # for complete linkage
+hc_average <- hclust(eu_dataset, method='average') # for average linkage
+hc_centroid <- hclust(eu_dataset, method='centroid') # for centroid linkage
+fviz_dend(hc_single, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Single')
+fviz_dend(hc_complete, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Complete')
+fviz_dend(hc_average, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Average')
+fviz_dend(hc_centroid, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Centroid')
+res <- prcomp(t_dataset, scale = FALSE)
+fviz_pca_ind(res, geom.ind = "point", addEllipses = TRUE, habillage = lookup$Series)
+```
+
+Ora faccio dendrogrammi e PCA per il DATASET SCALATO PER SAMPLE usando gli esperimenti come label:
+
+```{r}
+library(factoextra)
+eu_dataset <- dist(t_scale_dataset_experiment, method='euclidean')
+hc_single <- hclust(eu_dataset, method='single') # for single linkage
+hc_complete <- hclust(eu_dataset, method='complete') # for complete linkage
+hc_average <- hclust(eu_dataset, method='average') # for average linkage
+hc_centroid <- hclust(eu_dataset, method='centroid') # for centroid linkage
+fviz_dend(hc_single, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Single')
+fviz_dend(hc_complete, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Complete')
+fviz_dend(hc_average, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Average')
+fviz_dend(hc_centroid, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Centroid')
+res <- prcomp(t_scale_dataset, scale = FALSE)
+fviz_pca_ind(res, geom.ind = "point", addEllipses = TRUE, habillage = lookup$Series)
+```
+
+Ora faccio dendrogrammi e PCA per il DATASET SCALATO PER ESPERIMENTO usando gli esperimenti come label:
+
+```{r}
+library(factoextra)
+eu_dataset <- dist(t_dataset_scalebyexp_experiment, method='euclidean')
+hc_single <- hclust(eu_dataset, method='single') # for single linkage
+hc_complete <- hclust(eu_dataset, method='complete') # for complete linkage
+hc_average <- hclust(eu_dataset, method='average') # for average linkage
+hc_centroid <- hclust(eu_dataset, method='centroid') # for centroid linkage
+fviz_dend(hc_single, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Single')
+fviz_dend(hc_complete, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Complete')
+fviz_dend(hc_average, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Average')
+fviz_dend(hc_centroid, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Centroid')
+res <- prcomp(t(na.omit(t(t_dataset_scalebyexp))), scale = FALSE)
+fviz_pca_ind(res, geom.ind = "point", addEllipses = TRUE, habillage = lookup$Series)
+```
+
+Ora faccio dendrogrammi per il DATASET SCALATO PER SAMPLE usando gli Source name come label:
+
+```{r}
+library(factoextra)
+eu_dataset <- dist(t_scale_dataset_source, method='euclidean')
+hc_single <- hclust(eu_dataset, method='single') # for single linkage
+hc_complete <- hclust(eu_dataset, method='complete') # for complete linkage
+hc_average <- hclust(eu_dataset, method='average') # for average linkage
+hc_centroid <- hclust(eu_dataset, method='centroid') # for centroid linkage
+fviz_dend(hc_single, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Single')
+fviz_dend(hc_complete, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Complete')
+fviz_dend(hc_average, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Average')
+fviz_dend(hc_centroid, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Centroid')
+```
+
+Ora faccio dendrogrammi per il DATASET SCALATO PER ESPERIMENTO usando gli Source name come label:
+
+```{r}
+library(factoextra)
+eu_dataset <- dist(t_dataset_scalebyexp_source, method='euclidean')
+hc_single <- hclust(eu_dataset, method='single') # for single linkage
+hc_complete <- hclust(eu_dataset, method='complete') # for complete linkage
+hc_average <- hclust(eu_dataset, method='average') # for average linkage
+hc_centroid <- hclust(eu_dataset, method='centroid') # for centroid linkage
+fviz_dend(hc_single, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Single')
+fviz_dend(hc_complete, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Complete')
+fviz_dend(hc_average, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Average')
+fviz_dend(hc_centroid, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Centroid')
+```
+
+Ora faccio PCA usando i Tissue come label per i dataset SCALATI PER SAMPLE E PER ESPERIMENTO:
+
+```{r}
+res <- prcomp(t_scale_dataset, scale = FALSE)
+fviz_pca_ind(res, geom.ind = "point", addEllipses = TRUE, habillage = lookup$`Tissue`)
+res <- prcomp(t(na.omit(t(t_dataset_scalebyexp))), scale = FALSE)
+fviz_pca_ind(res, geom.ind = "point", addEllipses = TRUE, habillage = lookup$`Tissue`)
+```
+
+Infine faccio una PCA 3D sul dataset SCALATO PER SAMPLE:
+
+```{r}
+library(pca3d)
+res <- prcomp(t_scale_dataset, scale = FALSE)
+tissue_numbers <- revalue(lookup$Tissue, c("cord blood"="1", "ESC"="2", "adult fibroblast"="3", "neonatal fibroblast"="4", "AD specific fibroblast"="5", "embryonic liver"="6", "fetal liver" = "7"))
+pca3d(res, components = 1:3, col = tissue_numbers)
+```
+
+kNN CLASSIFICATION
+Per prima cosa, intendo usare le PC come proxy basso-dimensionale della diversità di espressione genica dei campioni. Intendo trovare un numero di PC in grado di spiegare l'85% della variabilità. Lo trovo analiticamente e mostro con un plot
+
+```{r}
+
+res <- prcomp(t_scale_dataset, scale = FALSE)
+plot(get_eig(res)$cumulative.variance.percent, type='b', axes=F, xlab='n', ylab='cumulative PVE')
+abline(h=85, lty=2, col='blue')
+box()
+abline(h=100, col='blue')
+axis(2, at=0:100,labels=0:100)
+axis(1,at=1:100,labels=1:100,las=2)
+```
+
+Superiamo l'85% con 12 componenti principali. Procedo con queste.
+
+```{r}
+
+coordinates_in_pc12 <- data.frame(cbind(res$x[,1:12], c(lookup$Tissue)))
+coordinates_in_pc12$PC1 <- as.numeric(coordinates_in_pc12$PC1)
+coordinates_in_pc12$PC2 <- as.numeric(coordinates_in_pc12$PC2)
+coordinates_in_pc12$PC3 <- as.numeric(coordinates_in_pc12$PC3)
+coordinates_in_pc12$PC4 <- as.numeric(coordinates_in_pc12$PC4)
+coordinates_in_pc12$PC5 <- as.numeric(coordinates_in_pc12$PC5)
+coordinates_in_pc12$PC6 <- as.numeric(coordinates_in_pc12$PC6)
+coordinates_in_pc12$PC7 <- as.numeric(coordinates_in_pc12$PC7)
+coordinates_in_pc12$PC8 <- as.numeric(coordinates_in_pc12$PC8)
+coordinates_in_pc12$PC9 <- as.numeric(coordinates_in_pc12$PC9)
+coordinates_in_pc12$PC10 <- as.numeric(coordinates_in_pc12$PC10)
+coordinates_in_pc12$PC11 <- as.numeric(coordinates_in_pc12$PC11)
+coordinates_in_pc12$PC12 <- as.numeric(coordinates_in_pc12$PC12)
+colnames(coordinates_in_pc12) <- c('PC1', 'PC2', 'PC3', 'PC4', 'PC5', 'PC6', 'PC7', 'PC8', 'PC9', 'PC10', 'PC11','PC12','label')
+library(caret)
+preproc.param <- coordinates_in_pc12 %>% preProcess(method = c("center", "scale"))
+train_transformed <- preproc.param %>% predict(coordinates_in_pc12)
+```
+
+Svolgo una cross validation per individuare il valore ottimale di k
+
+```{r}
+library(e1071)
+set.seed(2008)
+train_knn <- train(label ~ ., method = "knn", data = train_transformed, tuneGrid = data.frame(k = seq(1, 21, 2)))
+ggplot(train_knn, highlight = TRUE)
+good_k <- train_knn$bestTune
+```
+
+Fin qua, ho fatto tuning per trovare il miglior k (good_k), ora divido il dataset in train e test per fare una confusion matrix
+
+```{r}
+
+set.seed(234)
+training.samples <- createDataPartition(lookup$Tissue, p=0.75, list = FALSE)
+train <- train_transformed[training.samples, ]
+test <- train_transformed[-training.samples, ]
+train$label <- factor(train$label)
+test$label <- factor(test$label, levels=c("ESC", "cord blood", "adult fibroblast", "fetal liver", "embryonic liver" , "neonatal fibroblast", "AD specific fibroblast"))
+
+knn_cells <- knn3(label ~ ., data=train, k=good_k) 
+predict(knn_cells, test, type='prob')
+predict_test_knn <- predict(knn_cells, test, type='class')
+confusionMatrix(predict_test_knn, test$label)
+```
+
+
+
+23/03/2020
+
+Sostitusco al dataset gli ENSG invece delle probes:
+
+```{r}
+library(gprofiler2)
+ENSGnames <- gconvert(names, organism = "hsapiens", target = "ENSG", numeric_ns = "AFFY_HUGENE_1_0_ST_V1")
+ENSGnames <- ENSGnames[ which(!duplicated(ENSGnames$input_number )), ]
+dataset_ENSG <- dataset
+dataset_ENSG <- cbind(dataset_ENSG, GeneID = ENSGnames$target)
+dataset_ENSG <- dataset_ENSG[ dataset_ENSG$GeneID != "nan", ]
+dataset_ENSG <- dataset_ENSG[ which(!duplicated(dataset_ENSG$GeneID )), ]
+rownames(dataset_ENSG) <- dataset_ENSG$GeneID
+dataset_ENSG <- dataset_ENSG %>% select(- GeneID)
+
+t_scale_dataset_ENSG <- t(scale(dataset_ENSG))
+t_scale_dataset_ENSG_source <- t_scale_dataset_ENSG
+rownames(t_scale_dataset_ENSG_source) <- lookup$`Source name`
+```
+
+Ora faccio PCA e dendrogrammi:
+
+```{r}
+library(factoextra)
+eu_dataset <- dist(t_scale_dataset_ENSG_source, method='euclidean')
+hc_single <- hclust(eu_dataset, method='single') # for single linkage
+hc_complete <- hclust(eu_dataset, method='complete') # for complete linkage
+hc_average <- hclust(eu_dataset, method='average') # for average linkage
+hc_centroid <- hclust(eu_dataset, method='centroid') # for centroid linkage
+fviz_dend(hc_single, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Single')
+fviz_dend(hc_complete, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Complete')
+fviz_dend(hc_average, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Average')
+fviz_dend(hc_centroid, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Centroid')
+res <- prcomp(t_scale_dataset_ENSG, scale = FALSE)
+fviz_pca_ind(res, geom.ind = "point", addEllipses = TRUE, habillage = lookup$Tissue)
+```
+
+Ora faccio PCA 3D:
+
+```{r}
+library(pca3d)
+res <- prcomp(t_scale_dataset_ENSG, scale = FALSE)
+tissue_numbers <- revalue(lookup$Tissue, c("cord blood"="1", "ESC"="2", "adult fibroblast"="3", "neonatal fibroblast"="4", "AD specific fibroblast"="5", "embryonic liver"="6", "fetal liver" = "7"))
+pca3d(res, components = 1:3, col = tissue_numbers)
+```
+
+Ora prendo da GO una lista di geni coinvolta in embriogenesi e staminalità:
+
+```{r}
+library(readr)
+embryo <- read_csv("embryo.csv", col_names = FALSE)
+embryo <- gconvert(embryo$X1, organism = "hsapiens", target = "ENSG")
+embryo <- embryo[ embryo$target != "nan", ]
+embryo <- embryo[ which( !duplicated (embryo$target ) ) , ]
+stem <- read_csv("stem.csv", col_names = FALSE)
+stem <- gconvert(stem$X1, organism = "hsapiens", target = "ENSG")
+stem <- stem[ stem$target != "nan", ]
+stem <- stem[ which( !duplicated (stem$target ) ) , ]
+genelist <- c(stem$target, embryo$target)
+genelist <- genelist[ which( !duplicated ( genelist ) ) ]
+```
+
+Creo un dataset le cui righe sono i geni coinvolti in embriogenesi e staminalità:
+
+```{r}
+dataset_GO <- dataset_ENSG
+dataset_GO <- dataset_GO[rownames(dataset_GO) %in% genelist, ]
+
+t_scale_dataset_GO <- t(scale(dataset_GO))
+t_scale_dataset_GO_source <- t_scale_dataset_GO
+rownames(t_scale_dataset_GO_source) <- lookup$`Source name`
+
+```
+
+Ora faccio dendrogrammi e PCA:
+
+```{r}
+library(factoextra)
+eu_dataset <- dist(t_scale_dataset_GO_source, method='euclidean')
+hc_single <- hclust(eu_dataset, method='single') # for single linkage
+hc_complete <- hclust(eu_dataset, method='complete') # for complete linkage
+hc_average <- hclust(eu_dataset, method='average') # for average linkage
+hc_centroid <- hclust(eu_dataset, method='centroid') # for centroid linkage
+fviz_dend(hc_single, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Single')
+fviz_dend(hc_complete, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Complete')
+fviz_dend(hc_average, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Average')
+fviz_dend(hc_centroid, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Centroid')
+res <- prcomp(t_scale_dataset_GO, scale = FALSE)
+fviz_pca_ind(res, geom.ind = "point", addEllipses = TRUE, habillage = lookup$Tissue)
+```
+
+Ora faccio PCA 3D:
+
+```{r}
+library(pca3d)
+res <- prcomp(t_scale_dataset_GO, scale = FALSE)
+tissue_numbers <- revalue(lookup$Tissue, c("cord blood"="1", "ESC"="2", "adult fibroblast"="3", "neonatal fibroblast"="4", "AD specific fibroblast"="5", "embryonic liver"="6", "fetal liver" = "7"))
+pca3d(res, components = 1:3, col = tissue_numbers)
+```
+
+Cerchiamo di capire quali sono i geni che hanno loading maggiore nella PCA e li usiamo per fare PCA e dendrogrammi:
+
+```{r}
+res1 <- prcomp(t_scale_dataset_ENSG, scale = FALSE)
+loadings <- as.data.frame(abs(res1$rotation))
+loadings <- loadings %>% mutate(sumPC = PC1 + PC2 + PC3 + PC4 + PC5 + PC6 + PC7 + PC8 + PC9 + PC10 + PC11 + PC12)
+loadings <- loadings[order(-loadings$sumPC), , drop = FALSE]
+genes1000 <- rownames(loadings[1:1000, ])
+
+dataset_1000 <- dataset_ENSG
+dataset_1000 <- dataset_1000[rownames(dataset_1000) %in% genes1000, ]
+t_scale_dataset_1000 <- t(scale(dataset_1000))
+t_scale_dataset_1000_source <- t_scale_dataset_1000
+rownames(t_scale_dataset_1000_source) <- lookup$`Source name`
+
+eu_dataset <- dist(t_scale_dataset_1000_source, method='euclidean')
+hc_single <- hclust(eu_dataset, method='single') # for single linkage
+hc_complete <- hclust(eu_dataset, method='complete') # for complete linkage
+hc_average <- hclust(eu_dataset, method='average') # for average linkage
+hc_centroid <- hclust(eu_dataset, method='centroid') # for centroid linkage
+fviz_dend(hc_single, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Single')
+fviz_dend(hc_complete, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Complete')
+fviz_dend(hc_average, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Average')
+fviz_dend(hc_centroid, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Centroid')
+res <- prcomp(t_scale_dataset_1000, scale = FALSE)
+fviz_pca_ind(res, geom.ind = "point", addEllipses = TRUE, habillage = lookup$Tissue)
+
+res <- prcomp(t_scale_dataset_1000, scale = FALSE)
+tissue_numbers <- revalue(lookup$Tissue, c("cord blood"="1", "ESC"="2", "adult fibroblast"="3", "neonatal fibroblast"="4", "AD specific fibroblast"="5", "embryonic liver"="6", "fetal liver" = "7"))
+pca3d(res, components = 1:3, col = tissue_numbers)
+```
+Qui suddivido i dati in ESC versus IPSC, li riaggrego in divided_dataset (pacchetti [1:16] ESC, [17:70] IPSC), faccio il t.test per ciascun gene, poi colleziono la lista di p-values già corretti per false discovery rate. Infine filtro la lista dei nomi e trattengo in degs_ips_vs_esc_first_screen quelli che hanno p-value corretto <0.05.
+
+```{r}
+esc_samples <- lookup %>% filter(Tissue == 'ESC') %>% select(SampleID)
+ips_samples <- lookup %>% filter(Tissue != 'ESC') %>% select(SampleID)
+esc <- t_scale_dataset[unlist(esc_samples), ]
+ipsc <- t_scale_dataset[unlist(ips_samples), ]
+
+divided_dataset <- t(rbind(esc, ipsc))
+
+t.result <- apply(divided_dataset, 1, function(x) t.test(x[1:16], x[17:70], paired=FALSE))
+
+list_p_fdr <- p.adjust(unlist(lapply(t.result, function(x) x$p.value)), method="bonferroni")
+
+# non so se ho fatto tutto bene: con method = "fdr", più di 12.000 risultano significativi... con Bonferroni un migliaio e poco più, più onesto
+
+degs_ips_vs_esc_first_screen <- names[list_p_fdr < 0.05]
+```
+
+Per essere onesti, il t-test richiede fortemente la normalità e varianze simil-eque...qualche esperimento:
+
+```{r}
+hist(esc[, 1])
+hist(ipsc[,1])
+hist(esc[,137])
+hist(ipsc[,137])
+shapiro.test(esc[, 137]) # evidentemente molte distribuzioni geniche non sono neanche vagamente normali
+```
+
+Ripeto le analisi sopra con l'alternativa non-parametrica al t-test
+
+```{r}
+mann.result <- apply(divided_dataset, 1, function(x) wilcox.test(x[1:16], x[17:70], paired=FALSE))
+
+list_p_bonferroni_mann <- p.adjust(unlist(lapply(mann.result, function(x) x$p.value)), method="bonferroni")
+list_p_fdr_mann <- p.adjust(unlist(lapply(mann.result, function(x) x$p.value)), method="fdr")
+
+degs_ips_vs_esc_first_screen_mann <- names[list_p_bonferroni_mann < 0.10] # ora ho usato bonferroni perché con fdr ne sopravvivono troppi, quindi per alzare un po' l'asticella ho messo 0.10 come alfa di significatività 
+```
+
+Volcano plot, per ora con i geni ricavati dall'analisi con il test di Mann-Whitney corretto per mutiple testing di cui sopra.
+Main reference: https://bioconductor.org/help/course-materials/2015/Uruguay2015/day5-data_analysis.html
+Al momento, considero i dati già log2-ati, dal segnale che pensiamo di avere in mano. Anche perché così normalizzati altrimenti non saprei come loggarli, essendoci negativi
+
+```{r}
+esc_mean <- apply(divided_dataset[,1:16], 1, mean)
+ipsc_mean <- apply(divided_dataset[,17:70], 1, mean)
+log2FoldChange <- ipsc_mean - esc_mean
+de <- data.frame(names, log2FoldChange, list_p_bonferroni_mann, list_p_fdr_mann)
+library(ggrepel)
+de$diffexpressed <- "NO"
+de$diffexpressed[de$log2FoldChange > 0.6 & de$list_p_bonferroni_mann < 0.1] <- "UP"
+de$diffexpressed[de$log2FoldChange < -0.6 & de$list_p_bonferroni_mann < 0.1] <- "DOWN"
+de$delabel <- NA
+de$delabel[de$diffexpressed != "NO"] <- de$names[de$diffexpressed != "NO"]
+ggplot(data=de, aes(x=log2FoldChange, y=-log10(list_p_bonferroni_mann), col=diffexpressed, label=delabel)) +
+geom_point() + 
+theme_minimal() +
+geom_text_repel() +
+scale_color_manual(values=c("blue", "black", "red")) +
+geom_vline(xintercept=c(-0.6, 0.6), col="red") +
+geom_hline(yintercept=-log10(0.1), col="red")
+hist(log2FoldChange, xlab = "log2 Fold Change (IPSC vs ESC)")
+```
+
+Colorazione della PCA secondo i cluster individuati nello spazio delle PC
+```{r}
+eu_dataset_pc <- dist(coordinates_in_pc12, method='euclidean')
+hc_complete_pc12 <- hclust(eu_dataset_pc, method='complete')
+fviz_dend(hc_complete_pc12, as.ggplot = TRUE, show_labels = TRUE, main='Euclidean-Complete')
+set.seed(123) 
+fviz_nbclust(coordinates_in_pc12, hcut, method = "wss")
+fviz_pca_ind(res, geom.ind = "point", addEllipses = TRUE, habillage=cutree(hc_complete_pc12, k=4))
+pca3d(res, components = 1:3, col = cutree(hc_complete_pc12, k=4))
+```
+
+LINEAR DISCRIMINANT ANALYSIS (NB ma le assunzioni non sono per niente rispettate)
+
+```{r}
+library(MASS)
+coordinates_in_pc12 <- data.frame(cbind(res$x[,1:12], as.character(cutree(hc_complete_pc12, k=4))))
+coordinates_in_pc12$PC1 <- as.numeric(coordinates_in_pc12$PC1)
+coordinates_in_pc12$PC2 <- as.numeric(coordinates_in_pc12$PC2)
+coordinates_in_pc12$PC3 <- as.numeric(coordinates_in_pc12$PC3)
+coordinates_in_pc12$PC4 <- as.numeric(coordinates_in_pc12$PC4)
+coordinates_in_pc12$PC5 <- as.numeric(coordinates_in_pc12$PC5)
+coordinates_in_pc12$PC6 <- as.numeric(coordinates_in_pc12$PC6)
+coordinates_in_pc12$PC7 <- as.numeric(coordinates_in_pc12$PC7)
+coordinates_in_pc12$PC8 <- as.numeric(coordinates_in_pc12$PC8)
+coordinates_in_pc12$PC9 <- as.numeric(coordinates_in_pc12$PC9)
+coordinates_in_pc12$PC10 <- as.numeric(coordinates_in_pc12$PC10)
+coordinates_in_pc12$PC11 <- as.numeric(coordinates_in_pc12$PC11)
+coordinates_in_pc12$PC12 <- as.numeric(coordinates_in_pc12$PC12)
+colnames(coordinates_in_pc12) <- c('PC1', 'PC2', 'PC3', 'PC4', 'PC5', 'PC6', 'PC7', 'PC8', 'PC9', 'PC10', 'PC11','PC12','label')
+library(caret)
+preproc.param <- coordinates_in_pc12 %>% preProcess(method = c("center", "scale"))
+coordinates_in_pc12 <- preproc.param %>% predict(coordinates_in_pc12)
+
+# gli istogrammi e shapiro mostrano che i dati sono tutto meno che normali. Ogni trasformazione o subsetting dei dati falliscono
+hist(coordinates_in_pc12$PC1)
+hist(coordinates_in_pc12$PC2)
+hist(coordinates_in_pc12$PC3)
+hist(coordinates_in_pc12$PC4)
+hist(coordinates_in_pc12$PC5)
+hist(coordinates_in_pc12$PC6)
+
+labeled_1000 <- data.frame(cbind((t(dataset_1000)), c(lookup$Tissue)))
+hist(as.numeric(labeled_1000$ENSG00000113248))
+shapiro.test(as.numeric(labeled_1000$ENSG00000113248))
+
+set.seed(234)
+training.samples <- createDataPartition(coordinates_in_pc12$label, p=0.8, list = FALSE)
+train_lda <- coordinates_in_pc12[training.samples, ]
+test_lda <- coordinates_in_pc12[-training.samples, ]
+train_lda$label <- factor(train_lda$label)
+test_lda$label <- factor(test_lda$label)
+
+# me ne frego e tento comunque una lda (sbagliato anche perché le varianze sono ben ineque, ma per la qda i dati non sono a sufficienza - vedi sotto)
+lda_k4 <- lda(factor(label)~ PC1 + PC2 + PC3 + PC4 + PC5 + PC6 + PC7 + PC8 + PC9 + PC10 + PC11 + PC12, data=train_lda)
+# Error in qda.default(x, grouping, ...) : alcuni gruppi sono troppo piccoli per 'qda'
+
+# vedo se sul training set funziona bene (idea solo qualitativa o starei overfittando)
+predmodel.train.lda <- predict(lda_k4, data=train_lda)
+confusionMatrix(as.factor(predmodel.train.lda$class), factor(train_lda$label))
+
+# a questo punto plotto pari pari a quanto visto in classe sul dataset iris
+ldahist(predmodel.train.lda$x[,1], g= predmodel.train.lda$class)
+ldahist(predmodel.train.lda$x[,2], g= predmodel.train.lda$class)
+library(klaR)
+partimat(factor(label)~ PC1 + PC2, data=train_lda, method = "lda")
+partimat(factor(label)~ PC1 + PC2 + PC3, data=train_lda, method = "lda")
+
+# calcolo la reale accuratezza sul test set
+predmodel.test.lda <- predict(lda_k4, data=test_lda)
+confusionMatrix(as.factor(predmodel.test.lda$class), factor(test_lda$label))
+```
+
+Anche utilizzando i ranghi invece che i valori assoluti di espressione genica (calcolati per ciascun sample), la PCA rimane sostanzialmente quella, con i cluster evidentemente determinati dall'esperimento d'origine.
+
+```{r}
+library(matrixStats)
+ranked_dataset <- rowRanks(t_scale_dataset)
+res_ranked <- prcomp(ranked_dataset, scale = FALSE)
+fviz_pca_ind(res_ranked, geom.ind = "point", addEllipses = TRUE, habillage = lookup$Series)
+```
+```{r}
+# useless expe1 <- t_scale_dataset[unlist(c((lookup %>% filter(Series == "GSE21244"))[, 1])), ]
+ranked_GSE21244 <- rowRanks(unlist(GSE21244), rows=c(as.integer(1), as.integer(length(GSE21244))))
+```
+
+Preparo alcune liste di geni interessanti:
+- quelli che superano mann-whitney corretto con bonferroni e p<0.1 (genes_bonf)
+- quelli che superano mann-whitney corretto con fdr e p<0.005 (genes_fdr)
+- quelli che spiccano nel volcano plot per avere sia p-value che log2fold_change importanti (con bonferroni) (genes_volcano_bonf)
+- quelli che spiccano nel volcano plot per avere sia p-value che log2fold_change importanti (con fdr) ma meno stringenza sul fold change (genes_volcano_bonf2)
+- quelli che spiccano nel volcano plot per avere sia p-value che log2fold_change importanti (con fdr) (genes_volcano_fdr)
+- quelli che spiccano nel volcano plot per avere sia p-value che log2fold_change importanti (con fdr) ma meno stringenza sul fold change (genes_volcano_fdr2)
+- quelli con loading grande nelle prime 12 componenti principali (genes_loader)
+- quelli estratti da GO per avere un ruolo primario in embriogenesi e staminalità (genes_stem)
+
+```{r}
+genes_bonf <-  de %>% filter(list_p_bonferroni_mann < 0.1) 
+conv <- gconvert(genes_bonf[, 1], organism = "hsapiens", target = "ENSG", numeric_ns = "AFFY_HUGENE_1_0_ST_V1")
+conv <- conv[ which(!duplicated(conv$input )), ]
+genes_bonf[, 1] <- conv$target
+genes_bonf$gene_names <- conv$name
+genes_bonf$desc <- conv$description
+
+genes_fdr <-  de %>% filter(list_p_fdr_mann < 0.005) 
+conv <- gconvert(genes_fdr[, 1], organism = "hsapiens", target = "ENSG", numeric_ns = "AFFY_HUGENE_1_0_ST_V1")
+conv <- conv[ which(!duplicated(conv$input )), ]
+genes_fdr[, 1] <- conv$target
+genes_fdr$gene_names <- conv$name
+genes_fdr$desc <- conv$description
+
+genes_volcano_bonf <- de %>% filter(log2FoldChange < -0.6 | log2FoldChange > 0.6, list_p_bonferroni_mann < 0.1) 
+conv <- gconvert(genes_volcano_bonf[, 1], organism = "hsapiens", target = "ENSG", numeric_ns = "AFFY_HUGENE_1_0_ST_V1")
+conv <- conv[ which(!duplicated(conv$input )), ]
+genes_volcano_bonf[, 1] <- conv$target
+genes_volcano_bonf$gene_names <- conv$name
+genes_volcano_bonf$desc <- conv$description
+
+genes_volcano_bonf2 <- de %>% filter(log2FoldChange < -0.4 | log2FoldChange > 0.4, list_p_bonferroni_mann < 0.1)
+conv <- gconvert(genes_volcano_bonf2[, 1], organism = "hsapiens", target = "ENSG", numeric_ns = "AFFY_HUGENE_1_0_ST_V1")
+conv <- conv[ which(!duplicated(conv$input )), ]
+genes_volcano_bonf2[, 1] <- conv$target
+genes_volcano_bonf2$gene_names <- conv$name
+genes_volcano_bonf2$desc <- conv$description
+
+genes_volcano_fdr <- de %>% filter(log2FoldChange < -0.6 | log2FoldChange > 0.6, list_p_fdr_mann < 0.05)
+conv <- gconvert(genes_volcano_fdr[, 1], organism = "hsapiens", target = "ENSG", numeric_ns = "AFFY_HUGENE_1_0_ST_V1")
+conv <- conv[ which(!duplicated(conv$input )), ]
+genes_volcano_fdr[, 1] <- conv$target
+genes_volcano_fdr$gene_names <- conv$name
+genes_volcano_fdr$desc <- conv$description
+
+genes_volcano_fdr2 <- de %>% filter(log2FoldChange < -0.4 | log2FoldChange > 0.4, list_p_fdr_mann < 0.05)
+conv <- gconvert(genes_volcano_fdr2[, 1], organism = "hsapiens", target = "ENSG", numeric_ns = "AFFY_HUGENE_1_0_ST_V1")
+conv <- conv[ which(!duplicated(conv$input )), ]
+genes_volcano_fdr2[, 1] <- conv$target
+genes_volcano_fdr2$gene_names <- conv$name
+genes_volcano_fdr2$desc <- conv$description
+
+# da sistemare
+colnames(t_scale_dataset) <- names
+res2 <- prcomp(t_scale_dataset, scale = FALSE)
+loadings2 <- as.data.frame(abs(res2$rotation))
+loadings2 <- loadings2 %>% mutate(sumPC = PC1 + PC2 + PC3)# + PC4 + PC5 + PC6 + PC7 + PC8 + PC9 + PC10 + PC11 + PC12)
+loadings2 <- loadings2[order(-loadings2$sumPC), , drop = FALSE]
+genes1000_2 <- rownames(loadings2[1:1000, ])
+conv <- gconvert(genes1000_2, organism = "hsapiens", target = "ENSG", numeric_ns = "AFFY_HUGENE_1_0_ST_V1")
+conv <- conv[ which(!duplicated(conv$input )), ]
+genes_loader <- data.frame(conv$target)
+genes_loader$gene_names <- conv$name
+genes_loader$desc <- conv$description
+colnames(genes_loader) <- c("names", "gene_names", "desc")
+
+genes_stem <- rbind(cbind(embryo$target, embryo$name, embryo$description), cbind(stem$target, stem$name, stem$description))
+colnames(genes_stem) <- c("names", "gene_names", "desc")
+genes_stem <- genes_stem[ which(!duplicated(genes_stem[, 1] )), ]
+```
+
+Iniziamo plottando un diagramma di Venn dei gruppi di geni selezionati sopra
+
+```{r}
+library("ggVennDiagram")
+set.seed(20190708)
+x <- list(
+ # bonferroni = genes_volcano_bonf2[, 1], 
+  fdr_and_fold = genes_volcano_fdr2[, 1], 
+  loader_1pc = genes_loader[, 1]
+  #stem = genes_stem[, 1]
+  )
+ggVennDiagram(x)
+
+x <- list(
+  loader_3pc = genes_loader[, 1],
+  stem = genes_stem[, 1]
+  )
+ggVennDiagram(x)
+
+x <- list(
+  ffffffdr_and_fold = genes_volcano_fdr2[, 1], 
+  loader_3pc = genes_loader[, 1],
+  bonf = genes_bonf[, 1], 
+  stem = genes_stem[, 1]
+  )
+ggVennDiagram(x)
+```
+
+Provo a capire se i geni che passano la soglia di fdr e fold change nel confronto ESC vs IPSC afferiscono principalmente a qualche pathway
+```{r}
+write.table(genes_volcano_fdr2$names, "genelist.txt", append = FALSE, sep = " ", dec = ".",
+            row.names = TRUE, col.names = TRUE)
+```
+

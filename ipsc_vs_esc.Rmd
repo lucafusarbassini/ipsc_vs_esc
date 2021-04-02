@@ -1,0 +1,697 @@
+L'obiettivo di questo script è individuare un modo conveniente e veloce di distinguere una ESC da una generica IPSC, con i dati a disposizione, ovvero individuare una manciata di geni la cui lettura ci permetta di assegnare con buona probabilità ad una cellula l'etichetta di ESC oppure di IPSC. Questi geni dovrebbero essere in qualche modo legati alla diversità di funzione biologica ancora presente come gap da colmare tra una IPSC e l'obiettivo, cioè renderla più simile possibile alla ESC.
+
+Il percorso è questo:
+1) Suddivido il dataset in IPSC ed ESC, confronto gene per gene con Mann-Whitney corretto per multiple testing, trattengo solo i 45 geni differenzialmente espressi e con fold change di modulo > 1.3, che quindi sono le coordinate per i sample (fase suggerita dalla prof di "pre-screening")
+2) Vedo che facendo una PCA su questo nuovo spazio effettivamente le IPSC e le ESC formano due cluster ben distinti
+3) Esamino i loadings di questa PCA per trovare quali geni pesano nel determinare il buon clustering di ESC versus IPSC ("screening principale" suggerito dalla prof)
+4) Trovo due geni che fanno loading pauroso, plotto i samples usando come coordinate solo quei due samples - IPSC ed ESC appaiono ben clusterizzate: ho trovato un modello molto parsimonioso, su cui posso fare LDA, calcolo l'accuratezza con una LOOCV (leave one out cross validation)
+5) Mi chiedo se il pre-screening sia stato troppo drastico, quindi ripeto allo stesso modo ma selezionando i geni in modo più blando così da trattenerne circa 7000. Ripeto allora le analisi sopra e mi accorgo che diverse coppie di geni permettono di separare bene IPSC da ESC.
+6) Mi chiedo quindi se includere più di due geni possa ulteriormente migliorare l'accuratezza, quindi provo modelli con 6 o 19 geni che prevalgono nei loadings delle PC1 e PC2, la performance non migliora molto.
+7) Confronto le performance di questi modelli, mi chiedo se modelli fatti prendendo geni a caso performino altrettanto bene (per fortuna, la risposta è no), plotto le curve ROC per i tre modelli migliori usando test set casuali, ma notando che dato che abbiamo pochi samples, l'accuratezza dipende da quali casualmente finiscano nel training e quali nel test set.
+8) Aggiungo la classificazione sia con kNN sulle prime 12 PC che con kNN sui 1550 geni staminali, che con LDA, nei sei cluster, raffinando l'analisi. Con k = 1 e con l'LDA l'accuratezza supera l'80%.
+9) Analizzo la DEG list alla ricerca di moduli (non penso lo faremo davvero, la roba è molta) e di GO terms arricchiti (svolto)
+
+La prima parte dello script è interamente tratta dallo script precedente, in modo da preparare i dati. Potete iniziare a leggere dalla riga rossa con "27/3/21"
+
+```{r}
+library(readr)
+library(plyr)
+library(dplyr)
+dataset <- read_csv("dataset.csv")
+names <- as.character(dataset$`Gene ID`)
+dataset <- dataset %>% select (-X1, -`Gene ID`)
+rownames(dataset) <- names
+dataset <- dataset[ , order(colnames(dataset)) ]
+dataset <- dataset[ , which( !duplicated( t( dataset ) ) ) ]
+#Qui tolgo i sample che si riferiscono a fibroblasti e non cellule staminali
+dataset <- dataset %>% select(- Sample99, - Sample149, - Sample156, -Sample129, -Sample223)
+t_dataset <- t(dataset)
+```
+
+
+```{r}
+library(readr)
+library(dplyr)
+sample_to_info <- read_delim("sample_to_info.csv", ";", escape_double = FALSE, trim_ws = TRUE)
+lookup <- sample_to_info %>% mutate(presente = is.element(sample_to_info$SampleID, colnames(dataset))) %>% filter(presente == 'TRUE') %>% select(-presente)
+lookup <- lookup[ order(lookup$SampleID), ]
+lookup$`Source name` <- iconv(lookup$`Source name`, to = "ASCII//TRANSLIT")
+lookup <- lookup %>% mutate(Tissue = revalue(iconv(`Source name`, to = "ASCII//TRANSLIT"), c(
+    "Primed H9 hESC" = "ESC",
+    "Re-Primed WIBR3 hESC" = "ESC",
+    "undifferentiated H9 Human embryonic stem cells replicate 2" = "ESC",
+    "undifferentiated primary foreskin fibroblast derived induced pluripotent stem cell line 1" = "neonatal fibroblast",
+    "Human umbilical cord blood CD34+CD45+ cells" = "cord blood",
+    "undifferentiated BJ-TERT derived induced pluripotent stem cell line 28 replicate 1" = "neonatal fibroblast",
+    "Naive WIBR3 hESC" = "ESC",
+    "AD-specific iPSC7" = "AD specific fibroblast",
+    "Naive WIS2 Hesc" = "ESC",
+    "Naive BGO1 hESC" = "ESC",
+    "Naive H1 hESC" = "ESC",
+    "Naive C2 hiPSC" = "adult fibroblast",
+    "Naive C1 hiPSC" = "adult fibroblast",
+    "Naive Wis1 hESC" = "ESC",
+    "Naive H9 hESC" = "ESC",
+    "undifferentiated BJ-TERT derived induced pluripotent stem cell line 28 replicate 2" = "neonatal fibroblast",
+    "AD-specific iPSC1" = "AD specific fibroblast",
+    "iPSCs derived from human adult fibroblasts" = "adult fibroblast",
+    "hESC" = "ESC",
+    "iPSCs derived from human cord blood CD34+CD45+ cells" = "cord blood",
+    "undifferentiated H9 Human embryonic stem cells replicate 1" = "ESC",
+    "iPSCs derived from human adult dermal fibroblasts" = "adult fibroblast",
+    "undifferentiated BJ-TERT derived induced pluripotent stem cell line 29" = "neonatal fibroblast",
+    "undifferentiated H9 Human embryonic stem cells replicate 3" = "ESC",
+    "Primed WIBR3 hESC" = "ESC"
+)))
+unique(lookup$Tissue)
+
+lookup <- lookup %>% dplyr::mutate(Tissue1 = case_when(
+    Title == "iPSB_KM_rep1" ~ "embryonic liver",
+    Title == "iPSB_p23_rep1"~ "embryonic liver",
+    Title == "iPSC_KM_rep1" ~ "embryonic liver",
+    Title == "iPSA_KM_rep1" ~ "embryonic liver",
+    Title == "iPSA_p24_rep1"~ "embryonic liver",
+    Title == "iPSC_p19_rep1"~ "embryonic liver",
+    Title == "FLiPSC_p12_rep1"~ "fetal liver",
+    Title == "FLiPSC_p23_rep1"~ "fetal liver"))
+index <- !is.na(lookup$Tissue1)
+lookup$Tissue[index] <- lookup$Tissue1[index]
+lookup <- lookup %>% select(- Tissue1)
+t_scale_dataset <- t(scale(dataset))
+```
+
+```{r}
+library(gprofiler2)
+ENSGnames <- gconvert(names, organism = "hsapiens", target = "ENSG", numeric_ns = "AFFY_HUGENE_1_0_ST_V1")
+ENSGnames <- ENSGnames[ which(!duplicated(ENSGnames$input_number )), ]
+dataset_ENSG <- dataset
+dataset_ENSG <- cbind(dataset_ENSG, GeneID = ENSGnames$target)
+dataset_ENSG <- dataset_ENSG[ dataset_ENSG$GeneID != "nan", ]
+dataset_ENSG <- dataset_ENSG[ which(!duplicated(dataset_ENSG$GeneID )), ]
+rownames(dataset_ENSG) <- dataset_ENSG$GeneID
+dataset_ENSG <- dataset_ENSG %>% select(- GeneID)
+
+t_scale_dataset_ENSG <- t(scale(dataset_ENSG))
+t_scale_dataset_ENSG_source <- t_scale_dataset_ENSG
+rownames(t_scale_dataset_ENSG_source) <- lookup$`Source name`
+```
+
+
+Qui suddivido i dati in ESC versus IPSC, li riaggrego in divided_dataset (pacchetti [1:16] ESC, [17:70] IPSC), testo gene per gene l'espressione differenziale tra ESC e IPSC (Mann-Whitney, perché la normalità è pesantemente violata per molti geni) 
+```{r}
+esc_samples <- lookup %>% filter(Tissue == 'ESC') %>% select(SampleID)
+ips_samples <- lookup %>% filter(Tissue != 'ESC') %>% select(SampleID)
+esc <- t_scale_dataset_ENSG[unlist(esc_samples), ]
+ipsc <- t_scale_dataset_ENSG[unlist(ips_samples), ]
+
+divided_dataset <- t(rbind(esc, ipsc))
+
+mann.result <- apply(divided_dataset, 1, function(x) wilcox.test(x[1:16], x[17:70], paired=FALSE))
+
+list_p_bonferroni_mann <- p.adjust(unlist(lapply(mann.result, function(x) x$p.value)), method="bonferroni")
+list_p_fdr_mann <- p.adjust(unlist(lapply(mann.result, function(x) x$p.value)), method="fdr")
+
+degs_ips_vs_esc_first_screen_mann <- names(list_p_bonferroni_mann[list_p_bonferroni_mann < 0.05])
+```
+
+Volcano plot, per ora con i geni ricavati dall'analisi con il test di Mann-Whitney corretto per mutiple testing di cui sopra.
+Main reference: https://bioconductor.org/help/course-materials/2015/Uruguay2015/day5-data_analysis.html
+```{r}
+esc_mean <- apply(divided_dataset[,1:16], 1, mean)
+ipsc_mean <- apply(divided_dataset[,17:70], 1, mean)
+log2FoldChange <- ipsc_mean - esc_mean
+de <- data.frame(rownames(divided_dataset), log2FoldChange, list_p_bonferroni_mann, list_p_fdr_mann)
+library(ggrepel)
+de$diffexpressed <- "NO"
+de$diffexpressed[de$log2FoldChange > 0.6 & de$list_p_bonferroni_mann < 0.1] <- "UP"
+de$diffexpressed[de$log2FoldChange < -0.6 & de$list_p_bonferroni_mann < 0.1] <- "DOWN"
+de$delabel <- NA
+de$delabel[de$diffexpressed != "NO"] <- de$rownames.divided_dataset.[de$diffexpressed != "NO"]
+ggplot(data=de, aes(x=log2FoldChange, y=-log10(list_p_bonferroni_mann), col=diffexpressed, label=delabel)) +
+geom_point() + 
+theme_minimal() +
+geom_text_repel() +
+scale_color_manual(values=c("blue", "black", "red")) +
+geom_vline(xintercept=c(-0.6, 0.6), col="red") +
+geom_hline(yintercept=-log10(0.1), col="red")
+hist(log2FoldChange, xlab = "log2 Fold Change (IPSC vs ESC)")
+```
+
+___________________________________________________________________________________________________________________________________________
+
+27/3/21 !!!
+
+divided_dataset, creato in precedenza, è semplicemente il solito dataset ENSG, con le righe riordinate per avere prima tutte le ESC e poi tutte le IPSC. In divided_dataset2 trattengo solo quei geni con p-value corretto con Bonferroni < 0.1 e fold-change di modulo almeno 0.4. Ora ciascuno dei 70 samples è quindi individuato da un numero molto più basso di geni.
+```{r}
+divided_dataset2 <- divided_dataset[list_p_bonferroni_mann<0.1 & (log2FoldChange < -0.4 | log2FoldChange > 0.4), ]
+names_de <- rownames(divided_dataset2)
+t_div_data_label <- data.frame(cbind(t(divided_dataset2), c(rep(1, 16), rep(0, 54))))
+colnames(t_div_data_label) <- c(names_de, "label")
+```
+
+Su questo dataset ripulito, secondo il principio per cui trattengo solo features (geni) che siano marcatamente diversi tra ESC e IPSC, corro una PCA: se questi geni sono quelli che catturano la diversità tra ESC e IPSC, mi auguro che siano sufficienti per separarle bene. 1 indica ESC, 0 indica IPSC
+```{r}
+library(factoextra)
+res_ipsc_vs_esc <- prcomp(t_div_data_label[, 1:45], scale = FALSE)
+fviz_pca_ind(res_ipsc_vs_esc, geom.ind = "point", addEllipses = TRUE, habillage = t_div_data_label$label)
+loadings_ipsc_vs_esc <- as.data.frame(abs(res_ipsc_vs_esc$rotation))
+loadings_ipsc_vs_esc$PC1
+
+fviz_pca_var(res_ipsc_vs_esc, col.var = "contrib", labelsize = 4, gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),repel = TRUE)
+```
+Effettivamente, sembra addirittura che la componente principale 1 sia abbastanza da dire "PC1 > 0, allora sei IPSC, PC1 < 0, allora sei ESC".
+
+Esamino allora i contributi alle PC1 (e PC2, in realtà questa spiega già molto meno)
+```{r}
+fviz_contrib(res_ipsc_vs_esc, choice = "var", axes = 1, top = 10)
+fviz_contrib(res_ipsc_vs_esc, choice = "var", axes = 2, top = 10)
+fviz_contrib(res_ipsc_vs_esc, choice = "var", axes = 1:2, top = 10)
+
+loaders_pc1 <- colnames(t_div_data_label[, 1:45])[loadings_ipsc_vs_esc$PC1/sum(loadings_ipsc_vs_esc$PC1) > 0.03]
+loaders_pc2 <- colnames(t_div_data_label[, 1:45])[loadings_ipsc_vs_esc$PC2/sum(loadings_ipsc_vs_esc$PC2) > 0.06]
+```
+
+Noto dai loadings che due geni giocano un ruolo prioritario: provo a scatterare i sample semplicemente sullo spazio bidimensionale descritto da quei due geni, colorando diversamente ESC (azzurro) e IPSC (blu scuro)
+```{r}
+library(ggplot2)
+ggplot(t_div_data_label, aes(x = ENSG00000186777, y = ENSG00000200156, color = label)) + 
+    geom_point()
+	labs(x = "ENSG00000186777", y = "ENSG00000200156", title = "Titolo", subtitle = "Sottotitolo") +
+	theme_bw()
+```
+Sembra che abbiamo trovato i due geni che in ultima ci dicono "sei IPSC o sei ESC"! La separazione lineare in zone di piano sembra molto pulita.
+
+Preparo un dataset con le coordinate di ciascun sample nello spazio dei due geni selezionati e lo suddivido in training e test set
+```{r}
+library(MASS)
+library(factoextra)
+library(caret)
+
+set.seed(1284)
+training_samples <- t_div_data_label[,45] %>% createDataPartition(p = 0.8, list = FALSE)
+train <- data.frame(t_div_data_label$ENSG00000186777, t_div_data_label$ENSG00000200156, t_div_data_label$label)[training_samples, ]
+colnames(train) <- c("ENSG00000186777", "ENSG00000200156", "label")
+test <- data.frame(t_div_data_label$ENSG00000186777, t_div_data_label$ENSG00000200156, t_div_data_label$label)[-training_samples, ]
+colnames(test) <- c("ENSG00000186777", "ENSG00000200156", "label")
+test$label <- factor(test$label)
+```
+
+Corro una LDA, preparo la confusion matrix e i plot.
+Nota: perché LDA e non logistic regression? "MLEs in Logistic regression are highly unstable when the two classes are well separated." (dalle lezioni) - in altre parole, quando svolgo la logistica su training set diversi, e poi estraggo le features dominanti, tali features cambiano ogni volta. Penso dipenda dal fatto che abbiamo ben pochi punti sperimentali, quindi il risultato dipende da come li suddividiamo tra train e test; a lezione comunque si era detto che LDA è più "robusta". Se volete sbirciare la logistica, è sotto in "extra".
+Perché non QDA, essendo le varianze ineque? Abbiamo troppi pochi punti sperimentali (70 samples).
+```{r}
+lda_ipsc_esc <- lda(factor(label)~., data=train)
+
+library(klaR)
+partimat(factor(label)~ ENSG00000200156 + ENSG00000186777, data=train, method = "lda")
+
+predmodel.test.lda <- predict(lda_ipsc_esc, newdata=test)
+
+confusionMatrix(as.factor(predmodel.test.lda$class), test$label)
+
+predmodel.train.lda <- predict(lda_ipsc_esc, data=train)
+ldahist(predmodel.train.lda$x[,1], g= predmodel.train.lda$class)
+```
+ENSG00000186777 = zinc finger protein 732 - "The KRAB-ZFPs represent the largest family of mammalian transcriptional repressors, which function through the recruitment of the nuclear co-factor KRAB-Associated Protein 1 (KAP1), to engage histone modifiers and induce heterochromatin formation."
+ -> Sembrerebbe effettivamente espressa nello sviluppo, anche se mi sembra più tardivamente dello stadio ESC - https://bgee.org/?page=gene&gene_id=ENSG00000186777
+ 
+ENSG00000200156 = RNA, U5B small nuclear 1 - è un elemento dello spliceosoma - non ho trovato riferimenti al development
+
+Fino a qui, quindi, ho usato un approccio massimamente parsimonioso: mi bastano due geni per separare IPSC ed ESC con accuratezza circa 80%, bene: allora uso solo quelli.
+
+Noto inoltre che, sebbene il dataset sia abbastanza sbilanciato (circa 3 IPSC : 1 ESC), dalla confusion matrix (con diversi training set), la classificazione lavora bene sia su IPSC che su ESC. Suppongo quindi che siamo fortunati e non sia necessario correggere per lo sbilanciamento.
+
+Ma forse è possibile trovare geni "migliori", rilassando la richiesta iniziale su p-value e fold change?
+Provo a ripetere le analisi di cui sopra. Il risultato in realtà è che una seconda coppia di geni è in grado di conferire accuratezza confrontabile alla coppia di geni mostrata sopra, sempre tra 85 e 92% ripetendo con varie prove di training vs test set. Questi due geni non erano neanche tra quelli che ho esaminato finora... ragionevolmente con molte coppie di geni si può ottenere una buona separazione fra ESC e IPSC, che dal punto di vista biologico è (ahimè) anche ragionevole.
+```{r}
+divided_dataset_new <- divided_dataset[list_p_fdr_mann<0.01, ]
+names_de_new <- rownames(divided_dataset_new)
+t_div_data_label_new <- data.frame(cbind(t(divided_dataset_new), c(rep(1, 16), rep(0, 54))))
+colnames(t_div_data_label_new) <- c(names_de_new, "label")
+
+library(factoextra)
+res_ipsc_vs_esc_new <- prcomp(t_div_data_label_new[, 1:7020], scale = FALSE)
+fviz_pca_ind(res_ipsc_vs_esc_new, geom.ind = "point", addEllipses = TRUE, habillage = t_div_data_label_new$label)
+loadings_ipsc_vs_esc_new <- as.data.frame(abs(res_ipsc_vs_esc_new$rotation))
+
+fviz_pca_var(res_ipsc_vs_esc_new, col.var = "contrib", labelsize = 4, gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),repel = TRUE)
+
+fviz_contrib(res_ipsc_vs_esc_new, choice = "var", axes = 1, top = 10)
+fviz_contrib(res_ipsc_vs_esc_new, choice = "var", axes = 2, top = 10)
+fviz_contrib(res_ipsc_vs_esc_new, choice = "var", axes = 1:2, top = 10)
+
+library(ggplot2)
+ggplot(t_div_data_label_new, aes(x = ENSG00000237882, y = ENSG00000264229, color = label)) + 
+    geom_point()
+	labs(x = "ENSG00000237882", y = "ENSG00000264229", title = "Titolo", subtitle = "Sottotitolo") +
+	theme_bw()
+	
+library(MASS)
+library(factoextra)
+
+set.seed(367)
+training_samples_new <- t_div_data_label_new[,7021] %>% createDataPartition(p = 0.8, list = FALSE)
+train_new <- data.frame(t_div_data_label_new$ENSG00000237882, t_div_data_label_new$ENSG00000264229, t_div_data_label_new$label)[training_samples_new, ]
+colnames(train_new) <- c("ENSG00000237882", "ENSG00000264229", "label")
+test_new <- data.frame(t_div_data_label_new$ENSG00000237882, t_div_data_label_new$ENSG00000264229, t_div_data_label_new$label)[-training_samples_new, ]
+colnames(test_new) <- c("ENSG00000237882", "ENSG00000264229", "label")
+test_new$label <- factor(test_new$label)
+lda_ipsc_esc_new <- lda(factor(label)~., data=train_new)
+
+library(klaR)
+partimat(factor(label)~ ENSG00000264229 + ENSG00000237882, data=train_new, method = "lda")
+
+predmodel.test.lda_new <- predict(lda_ipsc_esc_new, newdata=test_new)
+
+confusionMatrix(as.factor(predmodel.test.lda_new$class), test_new$label)
+
+predmodel.train.lda_new <- predict(lda_ipsc_esc_new, data=train_new)
+ldahist(predmodel.train.lda_new$x[,1], g= predmodel.train.lda_new$class)
+```
+
+Chi sono questi due geni? (per quanto importi, visto che probabilmente molte coppie di geni vanno bene)
+ENSG00000237882 = PPIAP13 - Peptidylprolyl Isomerase A Pseudogene 13, non annotato :')
+ENSG00000264229 = RNU4ATAC - altro snRNA dello spliceosoma
+Considerazione biologica: idealmente, sono geni che a coppie possono essere studiati a scopo di ISH per distinguere in una miscela di cellule quali sono IPSC e quali ESC
+
+Mi chiedo se una soluzione meno parsimoniosa, ovvero considerando più di due geni, permetta di incrementare l'accuratezza. Provo includendo i 6 geni con più alto loading sulle PC1-2, indicati nel plot sopra. Sembra che l'accuratezza sia confrontabile a quanto ottenuto con soli due geni. Dovrei cross-validare.
+```{r}
+set.seed(1253)
+training_samples_new2 <- t_div_data_label_new[,7021] %>% createDataPartition(p = 0.8, list = FALSE)
+train_new2 <- data.frame(t_div_data_label_new$ENSG00000237882, t_div_data_label_new$ENSG00000264229, t_div_data_label_new$ENSG00000201998, t_div_data_label_new$ENSG00000280434, t_div_data_label_new$ENSG00000239128, t_div_data_label_new$ENSG00000207344, t_div_data_label_new$label)[training_samples_new2, ]
+colnames(train_new2) <- c("ENSG00000237882", "ENSG00000264229", "ENSG00000201998", "ENSG00000280434", "ENSG00000239128", "ENSG00000207344", "label")
+test_new2 <- data.frame(t_div_data_label_new$ENSG00000237882, t_div_data_label_new$ENSG00000264229, t_div_data_label_new$ENSG00000201998, t_div_data_label_new$ENSG00000280434, t_div_data_label_new$ENSG00000239128, t_div_data_label_new$ENSG00000207344, t_div_data_label_new$label)[-training_samples_new2, ]
+colnames(test_new2) <- c("ENSG00000237882", "ENSG00000264229", "ENSG00000201998", "ENSG00000280434", "ENSG00000239128", "ENSG00000207344", "label")
+test_new2$label <- factor(test_new2$label)
+lda_ipsc_esc_new2 <- lda(factor(label)~., data=train_new2)
+
+library(klaR)
+partimat(factor(label)~ ENSG00000264229 + ENSG00000237882, data=train_new2, method = "lda") # per ora plotto sui due geni (tra i sei impiegati per discriminare) con loading maggiore
+
+predmodel.test.lda_new2 <- predict(lda_ipsc_esc_new2, newdata=test_new2)
+
+confusionMatrix(as.factor(predmodel.test.lda_new2$class), test_new2$label)
+
+predmodel.train.lda_new2 <- predict(lda_ipsc_esc_new2, data=train_new2)
+ldahist(predmodel.train.lda_new2$x[,1], g= predmodel.train.lda_new2$class)
+```
+
+______________________________________________________________
+MODELLI 1,2,3
+
+Intendo cross-validare (LOOCV) i tre modelli LDA proposti sopra, per determinare se ce ne sia uno migliore.
+```{r}
+df1 <- data.frame(t_div_data_label$ENSG00000186777, t_div_data_label$ENSG00000200156, t_div_data_label$label)
+colnames(df1) <- c("ENSG00000186777", "ENSG00000200156", "label")
+lda.cv_mod1 <- lda(factor(label)~., data=df1, CV=TRUE)
+table(df1$label, lda.cv_mod1$class, dnn = c('Actual Group','Predicted Group'))
+
+df2 <- data.frame(t_div_data_label_new$ENSG00000237882, t_div_data_label_new$ENSG00000264229, t_div_data_label_new$label)
+colnames(df2) <- c("ENSG00000237882", "ENSG00000264229", "label")
+lda.cv_mod2 <- lda(factor(label)~., data=df2, CV=TRUE)
+table(df2$label, lda.cv_mod2$class, dnn = c('Actual Group','Predicted Group'))
+
+df3 <- data.frame(t_div_data_label_new$ENSG00000237882, t_div_data_label_new$ENSG00000264229, t_div_data_label_new$ENSG00000201998, t_div_data_label_new$ENSG00000280434, t_div_data_label_new$ENSG00000239128, t_div_data_label_new$ENSG00000207344, t_div_data_label_new$label)
+colnames(df3) <- c("ENSG00000237882", "ENSG00000264229", "ENSG00000201998", "ENSG00000280434", "ENSG00000239128", "ENSG00000207344", "label")
+lda.cv_mod3 <- lda(factor(label)~., data=df3, CV=TRUE)
+table(df3$label, lda.cv_mod3$class, dnn = c('Actual Group','Predicted Group'))
+
+```
+probably useless
+library(gt)
+data.frame(t3) %>%
+  gt() %>%
+  tab_header(
+    title = md("This is the `exibble` dataset in **gt**"),
+    subtitle = "It is one of six datasets in the package"
+  )
+_________________________________________________________________________________________________________
+MODELLI 4,5,6
+
+Includere sei geni migliora, sebbene non marcatamente, l'accuratezza. Svolgere la LOOCV inoltre fa emergenere una migliore capacità di individuare le IPSC rispetto alle ESC, coerentemente con lo sbilanciamento del dataset a favore delle prime. 
+
+Per controllo, svolgo la stessa analisi con due geni differenzialmente espressi ma che pesano poco nel loading (df4) o con due geni casuali del dataset iniziale (df5): la capacità predittiva dovrebbe scendere di molto. Verifico: effettivamente è così.
+Infine, provo con tutti i 45 geni della lista con p-value e fold-change significativi. Il risultato è confrontabile con quello che usa solo i due geni che fanno più loading, non migliora davvero.
+```{r}
+df4 <- data.frame(t_div_data_label_new$ENSG00000132964, t_div_data_label_new$ENSG00000204644, t_div_data_label_new$label)
+colnames(df4) <- c("ENSG00000132964", "ENSG00000204644", "label")
+lda.cv_mod4 <- lda(factor(label)~., data=df4, CV=TRUE)
+table(df4$label, lda.cv_mod4$class, dnn = c('Actual Group','Predicted Group'))
+
+df5 <- data.frame(t(divided_dataset)[, 356], t(divided_dataset)[, 12930], t_div_data_label_new$label)
+colnames(df5) <- c("genex1", "genex2", "label")
+lda.cv_mod5 <- lda(factor(label)~., data=df5, CV=TRUE)
+table(df5$label, lda.cv_mod5$class, dnn = c('Actual Group','Predicted Group'))
+
+lda.cv_mod6 <- lda(factor(label)~., data=t_div_data_label, CV=TRUE)
+table(t_div_data_label$label, lda.cv_mod6$class, dnn = c('Actual Group','Predicted Group'))
+```
+_________________________________________________________________________
+MODELLO 7
+
+Forse nei loadings il vero elbow viene dopo: provo a vedere il grafico dei loadings più dall'alto e a proporre un modello con molti più geni, alla ricerca di un incremento di accuratezza. Le analisi sono esattamente le stesse svolte per i modelli precedenti. Il risultato è un miglioramento nella qualità di identificazione delle ESC a discapito di una lieve perdita per le IPSC, l'accuratezza complessiva è confrontabile con quella dei migliori modelli (più parsimoniosi) visti prima.
+```{r}
+fviz_contrib(res_ipsc_vs_esc_new, choice = "var", axes = 1:2, top = 400)
+fviz_contrib(res_ipsc_vs_esc_new, choice = "var", axes = 1:2, top = 50)
+fviz_contrib(res_ipsc_vs_esc_new, choice = "var", axes = 1:2, top = 19)
+
+# voglio provare a trattenere i 19 geni più pesanti nel loading
+
+df7 <- data.frame(t_div_data_label_new$ENSG00000237882, t_div_data_label_new$ENSG00000264229, t_div_data_label_new$ENSG00000201998,  t_div_data_label_new$ENSG00000239128, t_div_data_label_new$ENSG00000207344, t_div_data_label_new$ENSG00000200795,t_div_data_label_new$ENSG00000186777,t_div_data_label_new$ENSG00000253007,t_div_data_label_new$ENSG00000200169,t_div_data_label_new$ENSG00000019549,t_div_data_label_new$ENSG00000201699,t_div_data_label_new$ENSG00000129317,t_div_data_label_new$ENSG00000206634,t_div_data_label_new$ENSG00000170373,t_div_data_label_new$ENSG00000230721,t_div_data_label_new$ENSG00000230530,t_div_data_label_new$ENSG00000200156,t_div_data_label_new$label)
+colnames(df7) <- c("1", "2", "3", "4", "5", "6","7","8","9","10","11","12","13", "14","15","16","17", "label")
+lda.cv_mod7 <- lda(factor(label)~., data=df7, CV=TRUE)
+table(df7$label, lda.cv_mod7$class, dnn = c('Actual Group','Predicted Group'))
+
+
+#??? t_div_data_label$ENSG00000280434, t_div_data_label_new$ENSG00000230939
+```
+Considero quindi interessanti i modelli 1, 3, 7 e riporto per questi il plot ROC (prendendo training e test set a caso). Le misure di sensitività, specificità e precisione non sto a rifarle: si trovano nei risultati di confusionMatrix di R.
+```{r}
+library(ROCR)
+
+# modello 1
+pred <- prediction(predmodel.test.lda$posterior[,2], test$label) 
+perf <- performance(pred,"tpr","fpr")
+plot(perf)
+
+# modello 3
+pred <- prediction(predmodel.test.lda_new2$posterior[,2], test_new2$label) 
+perf <- performance(pred,"tpr","fpr")
+plot(perf)
+
+# modello 7
+set.seed(36471)
+training_samples_7 <- df7[,1] %>% createDataPartition(p = 0.8, list = FALSE)
+train7 <- df7[training_samples_7, ]
+test7 <- df7[-training_samples_7, ]
+
+test7$label <- factor(test7$label)
+lda_ipsc_esc_7 <- lda(factor(label)~., data=train7)
+
+predmodel.test.lda_7 <- predict(lda_ipsc_esc_7, newdata=test7)
+confusionMatrix(as.factor(predmodel.test.lda_7$class), test7$label)
+
+pred <- prediction(predmodel.test.lda_7$posterior[,2], test7$label) 
+perf <- performance(pred,"tpr","fpr")
+plot(perf)
+
+```
+
+_________________________________________________________________________________________
+Questa sezione è quella già sviluppata i giorni scorsi, non ci sono modifiche da vedere. Lo riporto qui giusto per mostrarvi come organizzerei la discussione. 
+
+CLASSIFICAZIONE A SEI CLUSTER (settorializzazione dei tessuti di origine - scendiamo ad un livello più fine rispetto alla distinzione IPSC vs ESC)
+kNN e LDA
+
+kNN CLASSIFICATION
+Per prima cosa, intendo usare le PC come proxy basso-dimensionale della diversità di espressione genica dei campioni. Intendo trovare un numero di PC in grado di spiegare l'85% della variabilità. Lo trovo analiticamente e mostro con un plot
+
+```{r}
+res <- prcomp(t_scale_dataset, scale = FALSE)
+plot(get_eig(res)$cumulative.variance.percent, type='b', axes=F, xlab='n', ylab='cumulative PVE')
+abline(h=85, lty=2, col='blue')
+box()
+abline(h=100, col='blue')
+axis(2, at=0:100,labels=0:100)
+axis(1,at=1:100,labels=1:100,las=2)
+```
+
+Superiamo l'85% con 12 componenti principali. Procedo con queste.
+
+```{r}
+coordinates_in_pc12 <- data.frame(cbind(res$x[,1:12], c(lookup$Tissue)))
+coordinates_in_pc12$PC1 <- as.numeric(coordinates_in_pc12$PC1)
+coordinates_in_pc12$PC2 <- as.numeric(coordinates_in_pc12$PC2)
+coordinates_in_pc12$PC3 <- as.numeric(coordinates_in_pc12$PC3)
+coordinates_in_pc12$PC4 <- as.numeric(coordinates_in_pc12$PC4)
+coordinates_in_pc12$PC5 <- as.numeric(coordinates_in_pc12$PC5)
+coordinates_in_pc12$PC6 <- as.numeric(coordinates_in_pc12$PC6)
+coordinates_in_pc12$PC7 <- as.numeric(coordinates_in_pc12$PC7)
+coordinates_in_pc12$PC8 <- as.numeric(coordinates_in_pc12$PC8)
+coordinates_in_pc12$PC9 <- as.numeric(coordinates_in_pc12$PC9)
+coordinates_in_pc12$PC10 <- as.numeric(coordinates_in_pc12$PC10)
+coordinates_in_pc12$PC11 <- as.numeric(coordinates_in_pc12$PC11)
+coordinates_in_pc12$PC12 <- as.numeric(coordinates_in_pc12$PC12)
+colnames(coordinates_in_pc12) <- c('PC1', 'PC2', 'PC3', 'PC4', 'PC5', 'PC6', 'PC7', 'PC8', 'PC9', 'PC10', 'PC11','PC12','label')
+library(caret)
+preproc.param <- coordinates_in_pc12 %>% preProcess(method = c("center", "scale"))
+train_transformed <- preproc.param %>% predict(coordinates_in_pc12)
+```
+
+Svolgo una cross validation per individuare il valore ottimale di k
+
+```{r}
+library(e1071)
+set.seed(2008)
+train_knn <- train(label ~ ., method = "knn", data = train_transformed, tuneGrid = data.frame(k = seq(1, 21, 2)))
+ggplot(train_knn, highlight = TRUE)
+good_k <- train_knn$bestTune
+```
+
+Fin qua, ho fatto tuning per trovare il miglior k (good_k), ora divido il dataset in train e test per fare una confusion matrix
+
+```{r}
+
+set.seed(234)
+training.samples <- createDataPartition(lookup$Tissue, p=0.75, list = FALSE)
+train <- train_transformed[training.samples, ]
+test <- train_transformed[-training.samples, ]
+train$label <- factor(train$label)
+test$label <- factor(test$label, levels=c("ESC", "cord blood", "adult fibroblast", "fetal liver", "embryonic liver" , "neonatal fibroblast", "AD specific fibroblast"))
+
+knn_cells <- knn3(label ~ ., data=train, k=good_k) 
+predict(knn_cells, test, type='prob')
+predict_test_knn <- predict(knn_cells, test, type='class')
+confusionMatrix(predict_test_knn, test$label)
+```
+
+kNN sullo spazio 1500-dimensionale dei geni di embriogenesi e staminalità
+```{r}
+coordinates_in_stem <- data.frame(t_scale_dataset_GO, c(lookup$Tissue))
+
+library(caret)
+preproc.param <- coordinates_in_stem %>% preProcess(method = c("center", "scale"))
+train_transformed <- preproc.param %>% predict(coordinates_in_stem)
+
+library(e1071)
+set.seed(2008)
+train_knn <- train(c.lookup.Tissue. ~ ., method = "knn", data = train_transformed, tuneGrid = data.frame(k = seq(1, 21, 2)))
+ggplot(train_knn, highlight = TRUE)
+good_k <- train_knn$bestTune
+
+set.seed(234)
+training.samples <- createDataPartition(lookup$Tissue, p=0.75, list = FALSE)
+train <- train_transformed[training.samples, ]
+test <- train_transformed[-training.samples, ]
+train$c.lookup.Tissue. <- factor(train$c.lookup.Tissue.)
+test$c.lookup.Tissue. <- factor(test$c.lookup.Tissue., levels=c("ESC", "cord blood", "adult fibroblast", "fetal liver", "embryonic liver" , "neonatal fibroblast", "AD specific fibroblast"))
+
+knn_cells <- knn3(c.lookup.Tissue. ~ ., data=train, k=good_k) 
+predict(knn_cells, test, type='prob')
+predict_test_knn <- predict(knn_cells, test, type='class')
+confusionMatrix(predict_test_knn, test$c.lookup.Tissue.)
+```
+
+LINEAR DISCRIMINANT ANALYSIS (NB ma le assunzioni non sono per niente rispettate). A 6 CLUSTER ottenuti da clustering gerarchico con metodo 'complete'
+```{r}
+library(MASS)
+res <- prcomp(t_scale_dataset_ENSG, scale = FALSE)
+coordinates_in_pc12 <- data.frame(res$x[,1:12])
+eu_dataset_pc <- dist(coordinates_in_pc12, method='euclidean')
+hc_complete_pc12 <- hclust(eu_dataset_pc, method='complete')
+
+fviz_pca_ind(res, geom.ind = "point", addEllipses = TRUE, habillage=cutree(hc_complete_pc12, k=6))
+
+coordinates_in_pc12 <- data.frame(cbind(res$x[,1:12], as.character(cutree(hc_complete_pc12, k=6))))
+coordinates_in_pc12$PC1 <- as.numeric(coordinates_in_pc12$PC1)
+coordinates_in_pc12$PC2 <- as.numeric(coordinates_in_pc12$PC2)
+coordinates_in_pc12$PC3 <- as.numeric(coordinates_in_pc12$PC3)
+coordinates_in_pc12$PC4 <- as.numeric(coordinates_in_pc12$PC4)
+coordinates_in_pc12$PC5 <- as.numeric(coordinates_in_pc12$PC5)
+coordinates_in_pc12$PC6 <- as.numeric(coordinates_in_pc12$PC6)
+coordinates_in_pc12$PC7 <- as.numeric(coordinates_in_pc12$PC7)
+coordinates_in_pc12$PC8 <- as.numeric(coordinates_in_pc12$PC8)
+coordinates_in_pc12$PC9 <- as.numeric(coordinates_in_pc12$PC9)
+coordinates_in_pc12$PC10 <- as.numeric(coordinates_in_pc12$PC10)
+coordinates_in_pc12$PC11 <- as.numeric(coordinates_in_pc12$PC11)
+coordinates_in_pc12$PC12 <- as.numeric(coordinates_in_pc12$PC12)
+colnames(coordinates_in_pc12) <- c('PC1', 'PC2', 'PC3', 'PC4', 'PC5', 'PC6', 'PC7', 'PC8', 'PC9', 'PC10', 'PC11','PC12','label')
+library(caret)
+preproc.param <- coordinates_in_pc12 %>% preProcess(method = c("center", "scale"))
+coordinates_in_pc12 <- preproc.param %>% predict(coordinates_in_pc12)
+
+set.seed(273214)
+training.samples <- createDataPartition(coordinates_in_pc12$label, p=0.7, list = FALSE)
+train_lda <- coordinates_in_pc12[training.samples, ]
+test_lda <- coordinates_in_pc12[-training.samples, ]
+train_lda$label <- factor(train_lda$label)
+test_lda$label <- factor(test_lda$label, levels=c("1", "2", "3", "4", "5" , "6"))
+
+# me ne frego e tento comunque una lda (sbagliato anche perché le varianze sono ben ineque, ma per la qda i dati non sono a sufficienza
+lda_k6 <- lda(factor(label)~ PC1 + PC2 + PC3 + PC4 + PC5 + PC6 + PC7 + PC8 + PC9 + PC10 + PC11 + PC12, data=train_lda)
+
+
+# vedo se sul training set funziona bene (idea solo qualitativa o starei overfittando)
+predmodel.train.lda <- predict(lda_k6, data=train_lda)
+
+library(klaR)
+partimat(factor(label)~ PC1 + PC2, data=train_lda, method = "lda")
+partimat(factor(label)~ PC1 + PC2 + PC3, data=train_lda, method = "lda")
+
+# calcolo la reale accuratezza sul test set
+predmodel.test.lda <- predict(lda_k6, newdata=test_lda)
+confusionMatrix(as.factor(predmodel.test.lda$class), test_lda$label)
+```
+
+Preparo alcune liste di geni interessanti:
+- quelli che superano mann-whitney corretto con bonferroni e p<0.1 (genes_bonf)
+- quelli che superano mann-whitney corretto con fdr e p<0.005 (genes_fdr)
+- quelli che spiccano nel volcano plot per avere sia p-value che log2fold_change importanti (con bonferroni) (genes_volcano_bonf)
+- quelli che spiccano nel volcano plot per avere sia p-value che log2fold_change importanti (con fdr) ma meno stringenza sul fold change (genes_volcano_bonf2)
+- quelli che spiccano nel volcano plot per avere sia p-value che log2fold_change importanti (con fdr) (genes_volcano_fdr)
+- quelli che spiccano nel volcano plot per avere sia p-value che log2fold_change importanti (con fdr) ma meno stringenza sul fold change (genes_volcano_fdr2)
+- quelli con loading grande nelle prime 12 componenti principali (genes_loader)
+- quelli estratti da GO per avere un ruolo primario in embriogenesi e staminalità (genes_stem)
+
+```{r}
+genes_bonf <-  de %>% filter(list_p_bonferroni_mann < 0.1) 
+conv <- gconvert(genes_bonf[, 1], organism = "hsapiens", target = "ENSG", numeric_ns = "AFFY_HUGENE_1_0_ST_V1")
+conv <- conv[ which(!duplicated(conv$input )), ]
+genes_bonf[, 1] <- conv$target
+genes_bonf$gene_names <- conv$name
+genes_bonf$desc <- conv$description
+
+genes_fdr <-  de %>% filter(list_p_fdr_mann < 0.005) 
+conv <- gconvert(genes_fdr[, 1], organism = "hsapiens", target = "ENSG", numeric_ns = "AFFY_HUGENE_1_0_ST_V1")
+conv <- conv[ which(!duplicated(conv$input )), ]
+genes_fdr[, 1] <- conv$target
+genes_fdr$gene_names <- conv$name
+genes_fdr$desc <- conv$description
+
+genes_volcano_bonf <- de %>% filter(log2FoldChange < -0.6 | log2FoldChange > 0.6, list_p_bonferroni_mann < 0.1) 
+conv <- gconvert(genes_volcano_bonf[, 1], organism = "hsapiens", target = "ENSG", numeric_ns = "AFFY_HUGENE_1_0_ST_V1")
+conv <- conv[ which(!duplicated(conv$input )), ]
+genes_volcano_bonf[, 1] <- conv$target
+genes_volcano_bonf$gene_names <- conv$name
+genes_volcano_bonf$desc <- conv$description
+
+genes_volcano_bonf2 <- de %>% filter(log2FoldChange < -0.4 | log2FoldChange > 0.4, list_p_bonferroni_mann < 0.1)
+conv <- gconvert(genes_volcano_bonf2[, 1], organism = "hsapiens", target = "ENSG", numeric_ns = "AFFY_HUGENE_1_0_ST_V1")
+conv <- conv[ which(!duplicated(conv$input )), ]
+genes_volcano_bonf2[, 1] <- conv$target
+genes_volcano_bonf2$gene_names <- conv$name
+genes_volcano_bonf2$desc <- conv$description
+
+genes_volcano_fdr <- de %>% filter(log2FoldChange < -0.6 | log2FoldChange > 0.6, list_p_fdr_mann < 0.05)
+conv <- gconvert(genes_volcano_fdr[, 1], organism = "hsapiens", target = "ENSG", numeric_ns = "AFFY_HUGENE_1_0_ST_V1")
+conv <- conv[ which(!duplicated(conv$input )), ]
+genes_volcano_fdr[, 1] <- conv$target
+genes_volcano_fdr$gene_names <- conv$name
+genes_volcano_fdr$desc <- conv$description
+
+genes_volcano_fdr2 <- de %>% filter(log2FoldChange < -0.4 | log2FoldChange > 0.4, list_p_fdr_mann < 0.05)
+conv <- gconvert(genes_volcano_fdr2[, 1], organism = "hsapiens", target = "ENSG", numeric_ns = "AFFY_HUGENE_1_0_ST_V1")
+conv <- conv[ which(!duplicated(conv$input )), ]
+genes_volcano_fdr2[, 1] <- conv$target
+genes_volcano_fdr2$gene_names <- conv$name
+genes_volcano_fdr2$desc <- conv$description
+
+# da sistemare?
+colnames(t_scale_dataset) <- names
+res2 <- prcomp(t_scale_dataset, scale = FALSE)
+loadings2 <- as.data.frame(abs(res2$rotation))
+loadings2 <- loadings2 %>% mutate(sumPC = PC1 + PC2 + PC3)# + PC4 + PC5 + PC6 + PC7 + PC8 + PC9 + PC10 + PC11 + PC12)
+loadings2 <- loadings2[order(-loadings2$sumPC), , drop = FALSE]
+genes1000_2 <- rownames(loadings2[1:1000, ])
+conv <- gconvert(genes1000_2, organism = "hsapiens", target = "ENSG", numeric_ns = "AFFY_HUGENE_1_0_ST_V1")
+conv <- conv[ which(!duplicated(conv$input )), ]
+genes_loader <- data.frame(conv$target)
+genes_loader$gene_names <- conv$name
+genes_loader$desc <- conv$description
+colnames(genes_loader) <- c("names", "gene_names", "desc")
+
+# genes_stem <- rbind(cbind(embryo$target, embryo$name, embryo$description), cbind(stem$target, stem$name, stem$description))
+# colnames(genes_stem) <- c("names", "gene_names", "desc")
+# genes_stem <- genes_stem[ which(!duplicated(genes_stem[, 1] )), ]
+```
+
+Codice per diagrammi di Venn (decidere quali possono essere utili)
+```{r}
+library("ggVennDiagram")
+set.seed(20190708)
+x <- list(
+ # bonferroni = genes_volcano_bonf2[, 1], 
+  fdr_and_fold = genes_volcano_fdr2[, 1], 
+  loader_1pc = genes_loader[, 1]
+  #stem = genes_stem[, 1]
+  )
+ggVennDiagram(x)
+
+x <- list(
+  loader_3pc = genes_loader[, 1],
+  stem = genes_stem[, 1]
+  )
+ggVennDiagram(x)
+
+x <- list(
+  ffffffdr_and_fold = genes_volcano_fdr2[, 1], 
+  loader_3pc = genes_loader[, 1],
+  bonf = genes_bonf[, 1], 
+  stem = genes_stem[, 1]
+  )
+ggVennDiagram(x)
+```
+
+Provo a capire se i geni che passano la soglia di fdr e fold change nel confronto ESC vs IPSC afferiscono principalmente a qualche pathway
+```{r}
+write.csv(list(genes_volcano_fdr2$rownames.divided_dataset.), "outname.csv", row.names=FALSE)
+```
+Correndo i termini su GO, Processi biologici che risultano differenzialmente regolati sono legati a:
+mesenchyme migration and morphogenesis 
+Wnt signaling pathway
+heart development
+negative regulation of morphogenesis of an epithelium
+outflow tract septum morphogenesis
+chromatin organization involved in negative regulation of transcription
+negative regulation of gene expression, epigenetic
+endoderm development
+
+è cosa buona che molti termini sono collegati al development.
+Una storia da raccontare potrebbe essere che le IPSC che abbiamo incluso provengono da tessuti diversi, perciò è ragionevole (?) che in parte ne ritengano la signature del tessuto d'origine, regolando negativamente alcuni termini legati alla pluripotenza rispetto a quanto fanno le ESC, che sono "pienamente" pluripotenti.
+
+___________________________________________________________________________________________
+EXTRA
+
+LOGISTIC REGRESSION - mostra forte dipendenza da quali training e test set uno usa
+
+Preparo training set e test set
+```{r}
+library(tidyverse)
+library(caret)
+set.seed(938)
+training_samples <- t_div_data_label[,45] %>% createDataPartition(p = 0.9, list = FALSE)
+train <- t_div_data_label[training_samples, ]
+test <- t_div_data_label[-training_samples, ]
+test$label <- factor(test$label)
+```
+
+Tento una feature selection con criterio AIC (dalla teoria dell'informazione), per cui nel modello lineare generalizzato trattengo solo alcuni gradi di libertà, come mostrato dal report di R, che dovrebbero fornre un modello parsimonioso ma che catturi l'essenza della classificazione logistica. è qui che si manifesta la forte dipendenza da quali training e test set uno usa, tanto più quanto più piccolo è il training set (p in createDataPartition)
+```{r}
+library(MASS)
+glm_complete <- glm(label ~ ., data=train, family = 'binomial')
+summary(glm_complete)
+glm_stepwise <- glm_complete %>% stepAIC(direction='both', trace = FALSE)
+summary(glm_stepwise)
+AIC(glm_complete, glm_stepwise)
+prediction <- predict(glm_stepwise, newdata = test,type = 'response')
+prediction <- ifelse(prediction>0.5,1,0)
+accuracy <- mean(prediction==test$label)
+accuracy
+confusionMatrix(as.factor(prediction), test$label)
+```
+
+
+
+
+
+

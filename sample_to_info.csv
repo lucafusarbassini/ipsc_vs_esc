@@ -1,0 +1,475 @@
+SampleID;Title;Source name;Characteristics;Organization name;Department;Lab;Series;VALUE
+Sample1;human induced pluripotent stem cells (GPCCi001-A), biological rep3;"hiPSC cell line reprogrammed from fibroblasts; cultured in feeder-dependent defined conditions";cell type: hiPSCs;Poznan University of Medical Science;Histology and Embriology;;GSE106239;RMA normalized signal intensity
+Sample2;undifferentiated induced pluripotent stem cell clone 3975.2;undifferentiated induced pluripotent stem cell clone 3975.2;"cell type: Undifferentiated induced pluripotent stem cells
+genotype: 46(X,Y)
+age: passage 9
+cell line: induced pluripotent stem cell clone 3975.2";Hebrew University;Genetics;Nissim Benvenisty;GSE21243;MAS5 signal intensity
+Sample3;iPSCs derived from human cord blood CD34+CD45+ cells, biological rep1 [Naive-CB-hPSC#2 P7/6];iPSCs derived from human cord blood CD34+CD45+ cells;cell type: iPSCs derived from human cord blood CD34+CD45+ cells;McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE95502;Log2 RMA Normalized signal intensity
+Sample4;human induced pluripotent stem cells (GPCCi001-A), biological rep2;"hiPSC cell line reprogrammed from fibroblasts; cultured in feeder-dependent defined conditions";cell type: hiPSCs;Poznan University of Medical Science;Histology and Embriology;;GSE106239;RMA normalized signal intensity
+Sample5;undifferentiated H9 Human embryonic stem cells replicate 1;undifferentiated H9 Human embryonic stem cells replicate 1;"cell type: Undifferentiated human embryonic stem cells
+genotype: 46(X,X)
+age: passage 42
+cell line: H9 Human embryonic stem cells";Hebrew University;Genetics;Nissim Benvenisty;GSE21244;RMA signal intensity (log2 based values)
+Sample6;hiPSC line FiPS5-3, passage 12 ENSE;human induced pluripotent stem cell line FiPS5-3, passage 12;"cell type: human induced pluripotent stem cell line
+cell line/clone: clone FiPS5-3
+passage: 12
+cell origin: cell line is derived from Human neonatal foreskin fibroblast HFF cell, passage #11";Tampere University of Technology;SGN;;GSE42625;log2 RMA signal
+Sample7;BJ hIPS #12p5 sample 2;human induced pluripotent stem cells, #12 passage nr 5 confluent plate Donor BJ;human induced pluripotent stem cells, #12 passage nr 5 confluent plate Donor BJ;Icahn School of Medicine at Mount Sinai;Neuroscience;Tim D Ahfeldt;GSE12390;signal intensity
+Sample8;hESC, biological rep1;hESC;cell type: human embryonic stem cells (ESC);McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE62066;Log2 RMA Normalized signal intensity
+Sample9;iPSCs derived from human adult dermal fibroblasts, biological rep2_3;iPSCs derived from human adult dermal fibroblasts;"somatic source: adult dermal fibroblasts (Fib)
+cell type: Human induced pluripotent stem cells (hiPSCs)";McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE62066;Log2 RMA Normalized signal intensity
+Sample10;undifferentiated BJ-TERT derived induced pluripotent stem cell line 29;undifferentiated BJ-TERT derived induced pluripotent stem cell line 29;"cell type: Undifferentiated human induced pluripotent stem cells
+genotype: 46(X,Y)
+age: passage 14
+cell line: BJ-TERT derived induced pluripotent stem cell line 29";Hebrew University;Genetics;Nissim Benvenisty;GSE21244;RMA signal intensity (log2 based values)
+Sample11;iPSCs derived from human cord blood CD34+CD45+ cells, biological rep3 [Naive-CB-hPSC#2 P7/8];iPSCs derived from human cord blood CD34+CD45+ cells;cell type: iPSCs derived from human cord blood CD34+CD45+ cells;McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE95502;Log2 RMA Normalized signal intensity
+Sample12;HiPS-RIKEN-12A (II), biological rep3;HiPS-RIKEN-12A;cell line: HiPS-RIKEN-12A;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
+Sample13;undifferentiated H9 Human embryonic stem cells replicate 3;undifferentiated H9 Human embryonic stem cells replicate 3;"cell type: Undifferentiated human embryonic stem cells
+genotype: 46(X,X)
+age: passage 42
+cell line: H9 Human embryonic stem cells";Hebrew University;Genetics;Nissim Benvenisty;GSE21244;RMA signal intensity (log2 based values)
+Sample14;BJ hIPS #6p9 sample 1;human induced pluripotent stem cells, #6 passage nr 9 confluent plate Donor BJ;human induced pluripotent stem cells, #6 passage nr 9 confluent plate Donor BJ;Icahn School of Medicine at Mount Sinai;Neuroscience;Tim D Ahfeldt;GSE12390;signal intensity
+Sample15;409B2 (II), biological rep2;409B2;cell line: 409B2;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
+Sample16;BJ hIPS #8p10 sample 2;human induced pluripotent stem cells, #8 passage nr 10 confluent plate Donor BJ;human induced pluripotent stem cells, #8 passage nr 10 confluent plate Donor BJ;Icahn School of Medicine at Mount Sinai;Neuroscience;Tim D Ahfeldt;GSE12390;signal intensity
+Sample17;Primed_WIBR3_hESC;Primed WIBR3 hESC;"cell type: hESC
+pluripotent state: Primed";Weizmann Institute of Science;;;GSE46872;Log 2 signal intensity, after RMA normalization
+Sample18;iPSCs derived from human cord blood CD34+CD45+ cells, biological rep3 [Naive-CB-hPSC#1 P4/8];iPSCs derived from human cord blood CD34+CD45+ cells;cell type: iPSCs derived from human cord blood CD34+CD45+ cells;McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE95502;Log2 RMA Normalized signal intensity
+Sample19;iPSCs derived from human adult dermal fibroblasts, biological rep3 [Primed-Fib-hPSC#3P11];iPSCs derived from human adult fibroblasts;cell type: iPSCs derived from human adult fibroblasts;McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE95502;Log2 RMA Normalized signal intensity
+Sample20;undifferentiated induced pluripotent stem cell clone 3975.4;undifferentiated induced pluripotent stem cell clone 3975.4;"cell type: Undifferentiated induced pluripotent stem cells
+genotype: 46(X,Y)
+age: passage 6
+cell line: induced pluripotent stem cell clone 3975.4";Hebrew University;Genetics;Nissim Benvenisty;GSE21243;MAS5 signal intensity
+Sample21;undifferentiated BJ-TERT derived induced pluripotent stem cell line 29;undifferentiated BJ-TERT derived induced pluripotent stem cell line 29;"cell type: Undifferentiated human induced pluripotent stem cells
+genotype: 46(X,Y)
+age: passage 14
+cell line: BJ-TERT derived induced pluripotent stem cell line 29";Hebrew University;Genetics;Nissim Benvenisty;GSE21244;RMA signal intensity (log2 based values)
+Sample22;hiPSC line FiPS2-13, passage 12 ENSE;human induced pluripotent stem cell line FiPS2-13, passage 12;"cell type: human induced pluripotent stem cell line
+cell line/clone: clone FiPS2-13
+passage: 12
+cell origin: cell line is derived from Human embryonic lung fibroblast IMR90 cell, passage #14";Tampere University of Technology;SGN;;GSE42625;log2 RMA signal
+Sample23;HiPS-RIKEN-2A (II), biological rep3;HiPS-RIKEN-2A;cell line: HiPS-RIKEN-2A;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
+Sample24;iPSCs derived from human cord blood CD34+CD45+ cells, biological rep1 [Primed-CB-hPSC#1P10];iPSCs derived from human cord blood CD34+CD45+ cells;cell type: iPSCs derived from human cord blood CD34+CD45+ cells;McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE95502;Log2 RMA Normalized signal intensity
+Sample25;Human Embryonic Stem Cells passage 49 HSF1;Human Embryonic Stem Cells;passage 49;UCLA;MCDB;Lowry;GSE9865;Signal
+Sample26;409B2 (II), biological rep3;409B2;cell line: 409B2;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
+Sample27;iPSCs derived from human adult dermal fibroblasts, biological rep1 [Naive-Fib-hPSC#3 P4/6];iPSCs derived from human adult fibroblasts;cell type: iPSCs derived from human adult fibroblasts;McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE95502;Log2 RMA Normalized signal intensity
+Sample28;BJ hIPS #12p6 afp 4 #12 p 7 sample 2;human induced pluripotent stem cells (secondary), #12 passage nr 7 confluent plate Donor BJ;human induced pluripotent stem cells (secondary), #12 passage nr 7 confluent plate Donor BJ;Icahn School of Medicine at Mount Sinai;Neuroscience;Tim D Ahfeldt;GSE12390;signal intensity
+Sample29;01-HDFs-p5;Primary adult human skin cells;cell type: Primary adult human skin cells;University of California, Los Angeles;Department of Molecular and Medical Pharmacology;;GSE48830;MAS-5 Signal
+Sample30;iPSC from human cardiac fibroblasts;Pluripotent stem cells derived from primary HCFs (Thatava, T. et. al., Gene Therapy, 2011);tissue: HCF-derived pluripotent stem cell, expressing 4 reprogramming factors (Klf4, c-Myc, Sox2, and Oct4);Mayo Clinic;;;GSE33536;normalized (global scaling)
+Sample31;ATCC-DYR0100hiPSc (II), biological rep2;ATCC-DYR0100hiPSc;cell line: ATCC-DYR0100hiPSc;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
+Sample32;human induced pluripotent stem cells (GPCCi001-A), biological rep1;"hiPSC cell line reprogrammed from fibroblasts; cultured in feeder-dependent defined conditions";cell type: hiPSCs;Poznan University of Medical Science;Histology and Embriology;;GSE106239;RMA normalized signal intensity
+Sample33;201B7 (II), biological rep3;201B7;cell line: 201B7;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
+Sample34;iPSCs derived from human adult dermal fibroblasts, biological rep2 [Naive-Fib-hPSC#3 P4/7];iPSCs derived from human adult fibroblasts;cell type: iPSCs derived from human adult fibroblasts;McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE95502;Log2 RMA Normalized signal intensity
+Sample35;iPSCs derived from human adult dermal fibroblasts, biological rep1_1;iPSCs derived from human adult dermal fibroblasts;"somatic source: adult dermal fibroblasts (Fib)
+cell type: Human induced pluripotent stem cells (hiPSCs)";McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE62066;Log2 RMA Normalized signal intensity
+Sample36;HUES 8 p 30 sample 1;human embryonic stem cells HUES 8 p 30;human embryonic stem cells HUES 8 p 30;Icahn School of Medicine at Mount Sinai;Neuroscience;Tim D Ahfeldt;GSE12390;signal intensity
+Sample37;AD-specific iPSC1-2;AD-specific iPSC1;"disease state of patient: non-familial Alzheimer's disease
+cell type: human induced pluripotent stem cell (hiPSC)
+clone: 1
+culture type: feeder-free";Prince of Wales Hospital;Clinical Sciences Bld;Stem Cell Lab;GSE31163;Log2-transformed signal intensity
+Sample38;hiPSC line FiPS5-7, passage 10 ENSE;human induced pluripotent stem cell line FiPS5-7, passage 10;"cell type: human induced pluripotent stem cell line
+cell line/clone: clone FiPS5-7
+passage: 10
+cell origin: cell line is derived from Human neonatal foreskin fibroblast HFF cell, passage #11";Tampere University of Technology;SGN;;GSE42625;log2 RMA signal
+Sample39;undifferentiated H9 Human embryonic stem cells replicate 3;undifferentiated H9 Human embryonic stem cells replicate 3;"cell type: Undifferentiated human embryonic stem cells
+genotype: 46(X,X)
+age: passage 42
+cell line: H9 Human embryonic stem cells";Hebrew University;Genetics;Nissim Benvenisty;GSE21244;RMA signal intensity (log2 based values)
+Sample40;iPSCs derived from human cord blood CD34+CD45+ cells, biological rep2 [Primed-CB-hPSC#1P9];iPSCs derived from human cord blood CD34+CD45+ cells;cell type: iPSCs derived from human cord blood CD34+CD45+ cells;McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE95502;Log2 RMA Normalized signal intensity
+Sample41;B105_ ES;B105 undifferentiated cells;"cell type: Undifferentiated human embryonic stem cells
+genotype: 46(X,X)
+cell line: B105";Hebrew University;Genetics;Nissim Benvenisty;GSE64647;MAS5.0 signal
+Sample42;hiPSC line FiPS6-3, passage 14 ENSG;human induced pluripotent stem cell line FiPS6-3, passage 14;"cell type: human induced pluripotent stem cell line
+cell line/clone: clone FiPS6-3
+passage: 14
+cell origin: cell line is derived from Human neonatal foreskin fibroblast HFF cell, passage #11";Tampere University of Technology;SGN;;GSE42625;log2 RMA signal
+Sample43;454E2 (II), biological rep2;4,54E+04;cell line: 4.54E+04;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
+Sample44;iPSCs derived from human adult dermal fibroblasts, biological rep2 [Primed-Fib-hPSC#3P9];iPSCs derived from human adult fibroblasts;cell type: iPSCs derived from human adult fibroblasts;McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE95502;Log2 RMA Normalized signal intensity
+Sample45;mc-iPS (II), biological rep1;mc-iPS;cell line: mc-iPS;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
+Sample46;undifferentiated BJ-TERT derived induced pluripotent stem cell line 28 replicate 2;undifferentiated BJ-TERT derived induced pluripotent stem cell line 28 replicate 2;"cell type: Undifferentiated human induced pluripotent stem cells
+genotype: 46(X,Y)
+age: passage 15
+cell line: BJ-TERT derived induced pluripotent stem cell line 28";Hebrew University;Genetics;Nissim Benvenisty;GSE21244;RMA signal intensity (log2 based values)
+Sample47;iPSCs derived from human cord blood CD34+CD45+ cells, biological rep3 [Primed-CB-hPSC#1P11];iPSCs derived from human cord blood CD34+CD45+ cells;cell type: iPSCs derived from human cord blood CD34+CD45+ cells;McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE95502;Log2 RMA Normalized signal intensity
+Sample48;hiPSC line FiPS2-10, passage 16 ENSG;human induced pluripotent stem cell line FiPS2-10, passage 16;"cell type: human induced pluripotent stem cell line
+cell line/clone: clone FiPS2-10
+passage: 16
+cell origin: cell line is derived from Human embryonic lung fibroblast IMR90 cell, passage #14";Tampere University of Technology;SGN;;GSE42625;log2 RMA signal
+Sample49;hiPSC line FiPS6-12, passage 14 ENSG;human induced pluripotent stem cell line FiPS6-12, passage 14;"cell type: human induced pluripotent stem cell line
+cell line/clone: clone FiPS6-12
+passage: 14
+cell origin: cell line is derived from Human neonatal foreskin fibroblast HFF cell, passage #11";Tampere University of Technology;SGN;;GSE42625;log2 RMA signal
+Sample50;iPSCs derived from human cord blood CD34+CD45+ cells, biological rep3_1;iPSCs derived from human cord blood CD34+CD45+ cells;"somatic source: umbilical cord blood cells (CB)
+cell type: Human induced pluripotent stem cells (hiPSCs)";McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE62066;Log2 RMA Normalized signal intensity
+Sample51;iPS cell line of Human Third Molars 15-cl.39;iPS cell line of Human Third Molars;"cell line: iPS
+cell type: Human third molar";National Institute of Advanced Industrial Science and Technology;Research Institute for Cell Engineering;Tissue Engineering Research Group;GSE16963;Signal
+Sample52;iPSCs, biological rep2;human induced pluripotent stem cells;cell type: undifferentiated iPSCs;Johns Hopkins Bloomberg School of Public Health;Department of Biostatistics;;GSE93012;Quantile normalized gene level expression values from GeneBASE
+Sample53;04-hIPSC-preEx-p32;Human induced pluripotent stem cells - pre-Excision;cell type: Human induced pluripotent stem cells - pre-Excision;University of California, Los Angeles;Department of Molecular and Medical Pharmacology;;GSE48830;MAS-5 Signal
+Sample54;iPSCs derived from human cord blood CD34+CD45+ cells, biological rep3 [Primed-CB-hPSC#2P11];iPSCs derived from human cord blood CD34+CD45+ cells;cell type: iPSCs derived from human cord blood CD34+CD45+ cells;McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE95502;Log2 RMA Normalized signal intensity
+Sample55;IVDS2-1;In vitro differentiation stage2;cell type: ESC;Academia sinica;Genomic Research center;stem cell;GSE19964;RMA normalized
+Sample56;Naïve_H9_hESC;Naïve H9 hESC;"cell type: hESC
+pluripotent state: Naïve";Weizmann Institute of Science;;;GSE46872;Log 2 signal intensity, after RMA normalization
+Sample57;iPSCs derived from human cord blood CD34+CD45+ cells, biological rep3_3;iPSCs derived from human cord blood CD34+CD45+ cells;"somatic source: umbilical cord blood cells (CB)
+cell type: Human induced pluripotent stem cells (hiPSCs)";McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE62066;Log2 RMA Normalized signal intensity
+Sample58;hiPSCs-rep2;human induced Pluripotent Stem Cells;cell type: induced Pluripotent Stem Cells;Guangzhou Biocare Cancer Institude;;;GSE85885;RMA algorithm
+Sample59;Naïve_Wis1_hESC;Naïve Wis1 hESC;"cell type: hESC
+pluripotent state: Naïve";Weizmann Institute of Science;;;GSE46872;Log 2 signal intensity, after RMA normalization
+Sample60;253G1 (II), biological rep1;253G1;cell line: 253G1;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
+Sample61;iPSCs derived from human cord blood CD34+CD45+ cells, biological rep1 [Naive-CB-hPSC#1 P4/6];iPSCs derived from human cord blood CD34+CD45+ cells;cell type: iPSCs derived from human cord blood CD34+CD45+ cells;McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE95502;Log2 RMA Normalized signal intensity
+Sample62;undifferentiated induced pluripotent stem cell clone hIPS18_P10_CM;undifferentiated induced pluripotent stem cell clone hIPS18 after 10 passages growth in mouse embryonic fibroblasts conditioned medium;"cell type: Undifferentiated induced pluripotent stem cells
+genotype: 47(X,Y) +12
+age: passage 63
+cell line: induced pluripotent stem cell clone hIPS18_P10_CM";Hebrew University;Genetics;Nissim Benvenisty;GSE21243;MAS5 signal intensity
+Sample63;iPSB_KM_rep1;induced pluripotent stem cells;"gender: male
+cell type: embryonic fibroblasts";Albert Einstein College of medicine;Hematology/Cell biology;Bouhassira;GSE26946;RMA normalized signal intensity
+Sample64;hiPSC line FiPS6-12, passage 14 ENSE;human induced pluripotent stem cell line FiPS6-12, passage 14;"cell type: human induced pluripotent stem cell line
+cell line/clone: clone FiPS6-12
+passage: 14
+cell origin: cell line is derived from Human neonatal foreskin fibroblast HFF cell, passage #11";Tampere University of Technology;SGN;;GSE42625;log2 RMA signal
+Sample65;BJ hIPS #6p9 sample 3;human induced pluripotent stem cells, #6 passage nr 9 confluent plate Donor BJ;human induced pluripotent stem cells, #6 passage nr 9 confluent plate Donor BJ;Icahn School of Medicine at Mount Sinai;Neuroscience;Tim D Ahfeldt;GSE12390;signal intensity
+Sample66;hIPS18_WT p5 CM;HiPS18 undifferentaited cells;"cell type: Undifferentiated human induced pluripotent stem cells
+genotype: 46(X,X)
+cell line: hiPS18";Hebrew University;Genetics;Nissim Benvenisty;GSE64647;MAS5.0 signal
+Sample67;hiPSC line FiPS2-10, passage 16 ENSE;human induced pluripotent stem cell line FiPS2-10, passage 16;"cell type: human induced pluripotent stem cell line
+cell line/clone: clone FiPS2-10
+passage: 16
+cell origin: cell line is derived from Human embryonic lung fibroblast IMR90 cell, passage #14";Tampere University of Technology;SGN;;GSE42625;log2 RMA signal
+Sample68;iPS cell line of Human Third Molars 15-cl.58;iPS cell line of Human Third Molars;"cell line: iPS
+cell type: Human third molar";National Institute of Advanced Industrial Science and Technology;Research Institute for Cell Engineering;Tissue Engineering Research Group;GSE16963;Signal
+Sample69;hiPSC line FiPS1-14, passage 13 ENSG;human induced pluripotent stem cell line FiPS1-14, passage 13;"cell type: human induced pluripotent stem cell line
+cell line/clone: clone FiPS1-14
+passage: 13
+cell origin: cell line is derived from Human embryonic lung fibroblast IMR90 cell, passage #14";Tampere University of Technology;SGN;;GSE42625;log2 RMA signal
+Sample70;undifferentiated induced pluripotent stem cell clone IMR9.4;undifferentiated induced pluripotent stem cell clone IMR9.4;"cell type: Undifferentiated induced pluripotent stem cells
+genotype: 46(X,Y)
+age: passage 9
+cell line: induced pluripotent stem cell clone IMR9.4";Hebrew University;Genetics;Nissim Benvenisty;GSE21243;MAS5 signal intensity
+Sample71;undifferentiated H9 Human embryonic stem cells replicate 1;undifferentiated H9 Human embryonic stem cells replicate 1;"cell type: Undifferentiated human embryonic stem cells
+genotype: 46(X,X)
+age: passage 42
+cell line: H9 Human embryonic stem cells";Hebrew University;Genetics;Nissim Benvenisty;GSE21244;RMA signal intensity (log2 based values)
+Sample72;mRNA_Reprogrammed iPSC line 18 (p9);hiPSC line 18 (p9);"cell line: clone line 18
+passages: 9";UCLA;Human Genetics;;GSE16654;RMA-processed signal intensity
+Sample73;human iPSC line 6;human iPSC line 6;cell line: human iPSC line 6;Axol Bioscience Limited;;;GSE61358;signal intensity
+Sample74;iPS cell line of Human Third Molars 101-cl.8;iPS cell line of Human Third Molars;"cell line: iPS
+cell type: Human third molar";National Institute of Advanced Industrial Science and Technology;Research Institute for Cell Engineering;Tissue Engineering Research Group;GSE16963;Signal
+Sample75;undifferentiated induced pluripotent stem cell clone hIPS18_P10_CM;undifferentiated induced pluripotent stem cell clone hIPS18 after 10 passages growth in mouse embryonic fibroblasts conditioned medium;"cell type: Undifferentiated induced pluripotent stem cells
+genotype: 47(X,Y) +12
+age: passage 63
+cell line: induced pluripotent stem cell clone hIPS18_P10_CM";Hebrew University;Genetics;Nissim Benvenisty;GSE21243;MAS5 signal intensity
+Sample76;ATCC-DYR0103hiPSc (II), biological rep2;ATCC-DYR0104hiPSc;cell line: ATCC-DYR0103hiPSc;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
+Sample77;hiPSC line FiPS2-13, passage 12 ENSG;human induced pluripotent stem cell line FiPS2-13, passage 12;"cell type: human induced pluripotent stem cell line
+cell line/clone: clone FiPS2-13
+passage: 12
+cell origin: cell line is derived from Human embryonic lung fibroblast IMR90 cell, passage #14";Tampere University of Technology;SGN;;GSE42625;log2 RMA signal
+Sample78;AD-specific iPSC1-1;AD-specific iPSC1;"disease state of patient: non-familial Alzheimer's disease
+cell type: human induced pluripotent stem cell (hiPSC)
+clone: 1
+culture type: feeder-free";Prince of Wales Hospital;Clinical Sciences Bld;Stem Cell Lab;GSE31163;Log2-transformed signal intensity
+Sample79;HiPS-RIKEN-1A (II), biological rep1;HiPS-RIKEN-1A;cell line: HiPS-RIKEN-1A;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
+Sample80;human iPSC line 3;human iPSC line 3;cell line: human iPSC line 3;Axol Bioscience Limited;;;GSE61358;signal intensity
+Sample81;BJ hIPS #5p9 sample 2;human induced pluripotent stem cells, #5 passage nr 9 confluent plate Donor BJ;human induced pluripotent stem cells, #5 passage nr 9 confluent plate Donor BJ;Icahn School of Medicine at Mount Sinai;Neuroscience;Tim D Ahfeldt;GSE12390;signal intensity
+Sample82;Naïve_C1_hiPSC;Naïve C1 hiPSC;"cell type: hESC
+pluripotent state: Naïve";Weizmann Institute of Science;;;GSE46872;Log 2 signal intensity, after RMA normalization
+Sample83;mRNA_Reprogrammed iPSC line 1;hiPSC line 1 (p61);"cell type: induced pluripotent somatic cells
+cell line: clone line 1
+passages: 61";UCLA;Human Genetics;;GSE16654;RMA-processed signal intensity
+Sample84;BJ hIPS #12p6 afp 4 #12 p 7 sample 3;human induced pluripotent stem cells (secondary), #12 passage nr 7 confluent plate Donor BJ;human induced pluripotent stem cells (secondary), #12 passage nr 7 confluent plate Donor BJ;Icahn School of Medicine at Mount Sinai;Neuroscience;Tim D Ahfeldt;GSE12390;signal intensity
+Sample85;hiPSC line FiPS1-14, passage 13 ENST;human induced pluripotent stem cell line FiPS1-14, passage 13;"cell type: human induced pluripotent stem cell line
+cell line/clone: clone FiPS1-14
+passage: 13
+cell origin: cell line is derived from Human embryonic lung fibroblast IMR90 cell, passage #14";Tampere University of Technology;SGN;;GSE42625;log2 RMA signal
+Sample86;iPSCs derived from human cord blood CD34+CD45+ cells, biological rep2 [Naive-CB-hPSC#2 P7/7];iPSCs derived from human cord blood CD34+CD45+ cells;cell type: iPSCs derived from human cord blood CD34+CD45+ cells;McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE95502;Log2 RMA Normalized signal intensity
+Sample87;mRNA_Reprogrammed iPSC line 18 (p56);hiPSC line 18 (p56);"cell type: induced pluripotent somatic cells
+cell line: clone line 18
+passages: 56";UCLA;Human Genetics;;GSE16654;RMA-processed signal intensity
+Sample88;IVDS3-2;In vitro differentiation stage3;cell type: ESC;Academia sinica;Genomic Research center;stem cell;GSE19964;RMA normalized
+Sample89;hiPSC line FiPS5-7, passage 10 ENST;human induced pluripotent stem cell line FiPS5-7, passage 10;"cell type: human induced pluripotent stem cell line
+cell line/clone: clone FiPS5-7
+passage: 10
+cell origin: cell line is derived from Human neonatal foreskin fibroblast HFF cell, passage #11";Tampere University of Technology;SGN;;GSE42625;log2 RMA signal
+Sample90;iPSCs derived from human adult dermal fibroblasts, biological rep2_4;iPSCs derived from human adult dermal fibroblasts;"somatic source: adult dermal fibroblasts (Fib)
+cell type: Human induced pluripotent stem cells (hiPSCs)";McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE62066;Log2 RMA Normalized signal intensity
+Sample91;iPSCs derived from human cord blood CD34+CD45+ cells, biological rep5_2;iPSCs derived from human cord blood CD34+CD45+ cells;"somatic source: umbilical cord blood cells (CB)
+cell type: Human induced pluripotent stem cells (hiPSCs)";McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE62066;Log2 RMA Normalized signal intensity
+Sample92;253G1 (II), biological rep2;253G1;cell line: 253G1;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
+Sample93;iPSCs derived from human cord blood CD34+CD45+ cells, biological rep1_1;iPSCs derived from human cord blood CD34+CD45+ cells;"somatic source: umbilical cord blood cells (CB)
+cell type: Human induced pluripotent stem cells (hiPSCs)";McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE62066;Log2 RMA Normalized signal intensity
+Sample94;Naïve_C2_hiPSC;Naïve C2 hiPSC;"cell type: hESC
+pluripotent state: Naïve";Weizmann Institute of Science;;;GSE46872;Log 2 signal intensity, after RMA normalization
+Sample95;Naïve_H1_hESC;Naïve H1 hESC;"cell type: hESC
+pluripotent state: Naïve";Weizmann Institute of Science;;;GSE46872;Log 2 signal intensity, after RMA normalization
+Sample96;BJ hIPS #5p9 sample 3;human induced pluripotent stem cells, #5 passage nr 9 confluent plate Donor BJ;human induced pluripotent stem cells, #5 passage nr 9 confluent plate Donor BJ;Icahn School of Medicine at Mount Sinai;Neuroscience;Tim D Ahfeldt;GSE12390;signal intensity
+Sample97;IVDS2-2;In vitro differentiation stage2;cell type: ESC;Academia sinica;Genomic Research center;stem cell;GSE19964;RMA normalized
+Sample98;IVDS2-P2;In vitro differentiation stage2-peripheral;cell type: ESC;Academia sinica;Genomic Research center;stem cell;GSE19964;RMA normalized
+Sample100;Naïve_BGO1_hESC;Naïve BGO1 hESC;"cell type: hESC
+pluripotent state: Naïve";Weizmann Institute of Science;;;GSE46872;Log 2 signal intensity, after RMA normalization
+Sample101;BJ hIPS #8p10 sample 1;human induced pluripotent stem cells, #8 passage nr 10 confluent plate Donor BJ;human induced pluripotent stem cells, #8 passage nr 10 confluent plate Donor BJ;Icahn School of Medicine at Mount Sinai;Neuroscience;Tim D Ahfeldt;GSE12390;signal intensity
+Sample102;Naïve_WIS2_hESC;Naïve WIS2 Hesc;"cell type: hESC
+pluripotent state: Naïve";Weizmann Institute of Science;;;GSE46872;Log 2 signal intensity, after RMA normalization
+Sample103;human iduced pluripotent stem cell, biological replicate 2;human induced pluripotent stem cells reprogrammed from the human foreskin fibroblast cell line;cell line: human induced pluripotent stem cell;Karolinska Institutet;Medical Biochemistry and Biophysics;Chemistry I;GSE135409;quantile normalized
+Sample104;HiPS-RIKEN-2A (II), biological rep1;HiPS-RIKEN-2A;cell line: HiPS-RIKEN-2A;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
+Sample105;FLiPSC_p12_rep1;induced pluripotent stem cells;"gender: male
+cell type: fetal liver mesenchymal cells";Albert Einstein College of medicine;Hematology/Cell biology;Bouhassira;GSE26946;RMA normalized signal intensity
+Sample106;AD-specific iPSC7-3;AD-specific iPSC7;"disease state of patient: non-familial Alzheimer's disease
+cell type: human induced pluripotent stem cell (hiPSC)
+clone: 7
+culture type: feeder-free";Prince of Wales Hospital;Clinical Sciences Bld;Stem Cell Lab;GSE31163;Log2-transformed signal intensity
+Sample107;undifferentiated BJ-TERT derived induced pluripotent stem cell line 28 replicate 2;undifferentiated BJ-TERT derived induced pluripotent stem cell line 28 replicate 2;"cell type: Undifferentiated human induced pluripotent stem cells
+genotype: 46(X,Y)
+age: passage 15
+cell line: BJ-TERT derived induced pluripotent stem cell line 28";Hebrew University;Genetics;Nissim Benvenisty;GSE21244;RMA signal intensity (log2 based values)
+Sample108;mRNA_human ES cell line;CSES4 (p37);"cell line: Human embryonic stem cell line (CSES4)
+passages: 37";UCLA;Human Genetics;;GSE16654;RMA-processed signal intensity
+Sample109;HiPS-RIKEN-12A (II), biological rep1;HiPS-RIKEN-12A;cell line: HiPS-RIKEN-12A;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
+Sample110;iPSC replicate 2;iPSC cell line;cell type: induced pluripotent stem cells (iPSCs);Taipei Veterans General Hospital;;;GSE96853;Log2 RMA signal intensity
+Sample111;iPSCs derived from human adult dermal fibroblasts, biological rep1 [Primed-Fib-hPSC#3P10];iPSCs derived from human adult fibroblasts;cell type: iPSCs derived from human adult fibroblasts;McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE95502;Log2 RMA Normalized signal intensity
+Sample112;iPSCs derived from human adult dermal fibroblasts, biological rep1_2;iPSCs derived from human adult dermal fibroblasts;"somatic source: adult dermal fibroblasts (Fib)
+cell type: Human induced pluripotent stem cells (hiPSCs)";McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE62066;Log2 RMA Normalized signal intensity
+Sample113;hESC, biological rep3;hESC;cell type: human embryonic stem cells (ESC);McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE62066;Log2 RMA Normalized signal intensity
+Sample114;iPSCs derived from human cord blood CD34+CD45+ cells, biological rep5_1;iPSCs derived from human cord blood CD34+CD45+ cells;"somatic source: umbilical cord blood cells (CB)
+cell type: Human induced pluripotent stem cells (hiPSCs)";McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE62066;Log2 RMA Normalized signal intensity
+Sample115;iPSCs derived from human adult dermal fibroblasts, biological rep3 [Naive-Fib-hPSC#3 P4/8];iPSCs derived from human adult fibroblasts;cell type: iPSCs derived from human adult fibroblasts;McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE95502;Log2 RMA Normalized signal intensity
+Sample116;human keratinocyte (SW3)-derived iPSC;Pluripotent cells derived from primary human keratinocytes;tissue: SW3-derived iPS clone, expressing 4 reprogramming factors (Klf4, c-Myc, Sox2, and Oct4);Mayo Clinic;;;GSE33536;normalized (global scaling)
+Sample117;ATCC-DYR0100hiPSc (II), biological rep3;ATCC-DYR0100hiPSc;cell line: ATCC-DYR0100hiPSc;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
+Sample118;B123p15-ES;B123 undifferentiated cells;"cell type: Undifferentiated human embryonic stem cells
+genotype: 46(X,X)
+cell line: B123";Hebrew University;Genetics;Nissim Benvenisty;GSE64647;MAS5.0 signal
+Sample119;Naïve_WIBR3_hESC_2;Naïve WIBR3 hESC;"cell type: hESC
+pluripotent state: Naïve";Weizmann Institute of Science;;;GSE46872;Log 2 signal intensity, after RMA normalization
+Sample120;iPSB_p23_rep1;induced pluripotent stem cells;"gender: male
+cell type: embryonic fibroblasts";Albert Einstein College of medicine;Hematology/Cell biology;Bouhassira;GSE26946;RMA normalized signal intensity
+Sample121;hiPSC line FiPS6-3, passage 14 ENSE;human induced pluripotent stem cell line FiPS6-3, passage 14;"cell type: human induced pluripotent stem cell line
+cell line/clone: clone FiPS6-3
+passage: 14
+cell origin: cell line is derived from Human neonatal foreskin fibroblast HFF cell, passage #11";Tampere University of Technology;SGN;;GSE42625;log2 RMA signal
+Sample122;253G1 (II), biological rep3;253G1;cell line: 253G1;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
+Sample123;undifferentiated induced pluripotent stem cell clone 3975.4;undifferentiated induced pluripotent stem cell clone 3975.4;"cell type: Undifferentiated induced pluripotent stem cells
+genotype: 46(X,Y)
+age: passage 6
+cell line: induced pluripotent stem cell clone 3975.4";Hebrew University;Genetics;Nissim Benvenisty;GSE21243;MAS5 signal intensity
+Sample124;07-hESCs-H9-p29;Human embryonic stem cells (H9);"cell type: Human embryonic stem cells (H9)
+cell line: H9";University of California, Los Angeles;Department of Molecular and Medical Pharmacology;;GSE48830;MAS-5 Signal
+Sample125;hiPSC line FiPS2-13, passage 12 ENST;human induced pluripotent stem cell line FiPS2-13, passage 12;"cell type: human induced pluripotent stem cell line
+cell line/clone: clone FiPS2-13
+passage: 12
+cell origin: cell line is derived from Human embryonic lung fibroblast IMR90 cell, passage #14";Tampere University of Technology;SGN;;GSE42625;log2 RMA signal
+Sample126;undifferentiated BJ-TERT derived induced pluripotent stem cell line 28 replicate 2;undifferentiated BJ-TERT derived induced pluripotent stem cell line 28 replicate 2;"cell type: Undifferentiated human induced pluripotent stem cells
+genotype: 46(X,Y)
+age: passage 15
+cell line: BJ-TERT derived induced pluripotent stem cell line 28";Hebrew University;Genetics;Nissim Benvenisty;GSE21244;RMA signal intensity (log2 based values)
+Sample127;undifferentiated BJ-TERT derived induced pluripotent stem cell line 28 replicate 1;undifferentiated BJ-TERT derived induced pluripotent stem cell line 28 replicate 1;"cell type: Undifferentiated human induced pluripotent stem cells
+genotype: 46(X,Y)
+age: passage 15
+cell line: BJ-TERT derived induced pluripotent stem cell line 28";Hebrew University;Genetics;Nissim Benvenisty;GSE21244;RMA signal intensity (log2 based values)
+Sample128;HESC_HD90_p8;Human embryonic stem cell line HD90/FE07-142-L1, carrying a point mutation in the VHL gene;"cell line: HD90/FE07-142-L1
+cell type: human embryonic stem cells
+embryo characteristic: mutation in VHL gene";University Hospital of Montpellier;Institute for Research in Biotherapy;Microarray Core Facility;GSE15491;MAS5 (GCOS, Affymetrix) signal value
+Sample129;Human umbilical cord blood CD34+CD45+ cells, biological rep2;Human umbilical cord blood CD34+CD45+ cells;cell type: human umbilical cord blood CD34+CD45+ cells;McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE62066;Log2 RMA Normalized signal intensity
+Sample130;undifferentiated H9 Human embryonic stem cells replicate 3;undifferentiated H9 Human embryonic stem cells replicate 3;"cell type: Undifferentiated human embryonic stem cells
+genotype: 46(X,X)
+age: passage 42
+cell line: H9 Human embryonic stem cells";Hebrew University;Genetics;Nissim Benvenisty;GSE21244;RMA signal intensity (log2 based values)
+Sample131;hiPSC line FiPS2-10, passage 16 ENST;human induced pluripotent stem cell line FiPS2-10, passage 16;"cell type: human induced pluripotent stem cell line
+cell line/clone: clone FiPS2-10
+passage: 16
+cell origin: cell line is derived from Human embryonic lung fibroblast IMR90 cell, passage #14";Tampere University of Technology;SGN;;GSE42625;log2 RMA signal
+Sample132;HiPS-RIKEN-12A (II), biological rep2;HiPS-RIKEN-12A;cell line: HiPS-RIKEN-12A;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
+Sample133;iPSCs derived from human cord blood CD34+CD45+ cells, biological rep2 [Naive-CB-hPSC#1 P4/7];iPSCs derived from human cord blood CD34+CD45+ cells;cell type: iPSCs derived from human cord blood CD34+CD45+ cells;McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE95502;Log2 RMA Normalized signal intensity
+Sample134;03-hIPSC-preEx-p32;Human induced pluripotent stem cells - pre-Excision;cell type: Human induced pluripotent stem cells - pre-Excision;University of California, Los Angeles;Department of Molecular and Medical Pharmacology;;GSE48830;MAS-5 Signal
+Sample135;ATCC-DYR0100hiPSc (II), biological rep1;ATCC-DYR0100hiPSc;cell line: ATCC-DYR0100hiPSc;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
+Sample136;Primed_H9_hESC;Primed H9 hESC;"cell type: hESC
+pluripotent state: Primed";Weizmann Institute of Science;;;GSE46872;Log 2 signal intensity, after RMA normalization
+Sample137;IVDS2-P1;In vitro differentiation stage2-peripheral;cell type: ESC;Academia sinica;Genomic Research center;stem cell;GSE19964;RMA normalized
+Sample138;H9 Human Embryonic Stem Cell;H9 Human Embryonic Stem Cell;cell line: H9 embryonic stem cell line;McLean Hospital;Molecular neurobiology lab;;GSE16093;Affymetrix MAS5.0 Signal value
+Sample139;BJ hIPS #8p10 sample 3;human induced pluripotent stem cells, #8 passage nr 10 confluent plate Donor BJ;human induced pluripotent stem cells, #8 passage nr 10 confluent plate Donor BJ;Icahn School of Medicine at Mount Sinai;Neuroscience;Tim D Ahfeldt;GSE12390;signal intensity
+Sample140;Human induced pluripotent stem cell clone 1-8 cultured in mTeSR1 on Matrigel (2);human induced pluripotent stem cells from fibroblast (5F0438) cultured in mTeSR1 on Matrigel;human embryonic stem cells like pluripotent stem cells (46XY);Japanease National Cancer Center;Research Institute;Section for Studies on Metastasis;GSE9709;signal intensity
+Sample141;undifferentiated H9 Human embryonic stem cells replicate 2;undifferentiated H9 Human embryonic stem cells replicate 2;"cell type: Undifferentiated human embryonic stem cells
+genotype: 46(X,X)
+age: passage 42
+cell line: H9 Human embryonic stem cells";Hebrew University;Genetics;Nissim Benvenisty;GSE21244;RMA signal intensity (log2 based values)
+Sample142;Re-Primed_WIBR3_hESC;Re-Primed WIBR3 hESC;"cell type: hESC
+pluripotent state: Primed";Weizmann Institute of Science;;;GSE46872;Log 2 signal intensity, after RMA normalization
+Sample143;iPSCs derived from human cord blood CD34+CD45+ cells, biological rep1 [Primed-CB-hPSC#2P10];iPSCs derived from human cord blood CD34+CD45+ cells;cell type: iPSCs derived from human cord blood CD34+CD45+ cells;McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE95502;Log2 RMA Normalized signal intensity
+Sample144;Naïve_WIBR3_hESC_1;Naïve WIBR3 hESC;"cell type: hESC
+pluripotent state: Naïve";Weizmann Institute of Science;;;GSE46872;Log 2 signal intensity, after RMA normalization
+Sample145;ATCC-DYR0103hiPSc (II), biological rep1;ATCC-DYR0103hiPSc;cell line: ATCC-DYR0103hiPSc;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
+Sample146;BJ hIPS #12p5 sample 3;human induced pluripotent stem cells, #12 passage nr 5 confluent plate Donor BJ;human induced pluripotent stem cells, #12 passage nr 5 confluent plate Donor BJ;Icahn School of Medicine at Mount Sinai;Neuroscience;Tim D Ahfeldt;GSE12390;signal intensity
+Sample147;HiPS-RIKEN-1A (II), biological rep3;HiPS-RIKEN-1A;cell line: HiPS-RIKEN-1A;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
+Sample148;hESC, biological rep2;hESC;cell type: human embryonic stem cells (ESC);McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE62066;Log2 RMA Normalized signal intensity
+Sample150;hiPSC line FiPS3-12, passage 19 ENSE;human induced pluripotent stem cell line FiPS3-12, passage 19;"cell type: human induced pluripotent stem cell line
+cell line/clone: clone FiPS3-12
+passage: 19
+cell origin: cell line is derived from Human embryonic lung fibroblast MRC5 cell, passage #19";Tampere University of Technology;SGN;;GSE42625;log2 RMA signal
+Sample151;02-HDFs-p5;Primary adult human skin cells;cell type: Primary adult human skin cells;University of California, Los Angeles;Department of Molecular and Medical Pharmacology;;GSE48830;MAS-5 Signal
+Sample152;hiPSC line FiPS5-3, passage 12 ENSG;human induced pluripotent stem cell line FiPS5-3, passage 12;"cell type: human induced pluripotent stem cell line
+cell line/clone: clone FiPS5-3
+passage: 12
+cell origin: cell line is derived from Human neonatal foreskin fibroblast HFF cell, passage #11";Tampere University of Technology;SGN;;GSE42625;log2 RMA signal
+Sample153;undifferentiated induced pluripotent stem cell clone IMR9.4;undifferentiated induced pluripotent stem cell clone IMR9.4;"cell type: Undifferentiated induced pluripotent stem cells
+genotype: 46(X,Y)
+age: passage 9
+cell line: induced pluripotent stem cell clone IMR9.4";Hebrew University;Genetics;Nissim Benvenisty;GSE21243;MAS5 signal intensity
+Sample154;hESCs-rep1;human Embryonic Stem Cells;cell type: Embryonic Stem Cells;Guangzhou Biocare Cancer Institude;;;GSE85885;RMA algorithm
+Sample155;FLiPSC_p23_rep1;induced pluripotent stem cells;"gender: male
+cell type: fetal liver mesenchymal cells";Albert Einstein College of medicine;Hematology/Cell biology;Bouhassira;GSE26946;RMA normalized signal intensity
+Sample157;201B7 (II), biological rep2;201B7;cell line: 201B7;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
+Sample158;BJ hIPS #12p6 afp 4 #12 p 7 sample 1;human induced pluripotent stem cells (secondary), #12 passage nr 7 confluent plate Donor BJ;human induced pluripotent stem cells (secondary), #12 passage nr 7 confluent plate Donor BJ;Icahn School of Medicine at Mount Sinai;Neuroscience;Tim D Ahfeldt;GSE12390;signal intensity
+Sample159;undifferentiated H9 Human embryonic stem cells replicate 2;undifferentiated H9 Human embryonic stem cells replicate 2;"cell type: Undifferentiated human embryonic stem cells
+genotype: 46(X,X)
+age: passage 42
+cell line: H9 Human embryonic stem cells";Hebrew University;Genetics;Nissim Benvenisty;GSE21244;RMA signal intensity (log2 based values)
+Sample160;409B2 (II), biological rep1;409B2;cell line: 409B2;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
+Sample161;iPSCs, biological rep1;human induced pluripotent stem cells;cell type: undifferentiated iPSCs;Johns Hopkins Bloomberg School of Public Health;Department of Biostatistics;;GSE93012;Quantile normalized gene level expression values from GeneBASE
+Sample162;454E2 (II), biological rep1;4,54E+04;cell line: 4.54E+04;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
+Sample163;05-hIPSC-postEx-p28;Human induced pluripotent stem cells - post-Excision;cell type: Human induced pluripotent stem cells - post-Excision;University of California, Los Angeles;Department of Molecular and Medical Pharmacology;;GSE48830;MAS-5 Signal
+Sample164;iPSC_KM_rep1;induced pluripotent stem cells;"gender: male
+cell type: embryonic fibroblasts";Albert Einstein College of medicine;Hematology/Cell biology;Bouhassira;GSE26946;RMA normalized signal intensity
+Sample165;BJ hIPS #12p5 sample 1;human induced pluripotent stem cells, #12 passage nr 5 confluent plate Donor BJ;human induced pluripotent stem cells, #12 passage nr 5 confluent plate Donor BJ;Icahn School of Medicine at Mount Sinai;Neuroscience;Tim D Ahfeldt;GSE12390;signal intensity
+Sample166;hiPSC line FiPS3-12, passage 19 ENSG;human induced pluripotent stem cell line FiPS3-12, passage 19;"cell type: human induced pluripotent stem cell line
+cell line/clone: clone FiPS3-12
+passage: 19
+cell origin: cell line is derived from Human embryonic lung fibroblast MRC5 cell, passage #19";Tampere University of Technology;SGN;;GSE42625;log2 RMA signal
+Sample167;HUES 8 p 30 sample 2;human embryonic stem cells HUES 8 p 30;human embryonic stem cells HUES 8 p 30;Icahn School of Medicine at Mount Sinai;Neuroscience;Tim D Ahfeldt;GSE12390;signal intensity
+Sample168;201B7 (II), biological rep1;201B7;cell line: 201B7;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
+Sample169;Human induced pluripotent stem cell clone 1-8 cultured in MEF-conditioned medium on Matrigel;human induced pluripotent stem cells from fibroblast (5F0438) cultured in MEF-conditioned medium on Matrigel;human embryonic stem cells like pluripotent stem cells (46XY);Japanease National Cancer Center;Research Institute;Section for Studies on Metastasis;GSE9709;signal intensity
+Sample170;hiPSC line FiPS3-12, passage 19 ENST;human induced pluripotent stem cell line FiPS3-12, passage 19;"cell type: human induced pluripotent stem cell line
+cell line/clone: clone FiPS3-12
+passage: 19
+cell origin: cell line is derived from Human embryonic lung fibroblast MRC5 cell, passage #19";Tampere University of Technology;SGN;;GSE42625;log2 RMA signal
+Sample171;iPSCs derived from human adult dermal fibroblasts, biological rep2_1;iPSCs derived from human adult dermal fibroblasts;"somatic source: adult dermal fibroblasts (Fib)
+cell type: Human induced pluripotent stem cells (hiPSCs)";McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE62066;Log2 RMA Normalized signal intensity
+Sample172;iPSCs derived from human cord blood CD34+CD45+ cells, biological rep3_2;iPSCs derived from human cord blood CD34+CD45+ cells;"somatic source: umbilical cord blood cells (CB)
+cell type: Human induced pluripotent stem cells (hiPSCs)";McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE62066;Log2 RMA Normalized signal intensity
+Sample173;undifferentiated primary foreskin fibroblast derived induced pluripotent stem cell line 1;undifferentiated primary foreskin fibroblast derived induced pluripotent stem cell line 1;"cell type: Undifferentiated human induced pluripotent stem cells
+genotype: 46(X,Y)
+age: passage 5
+cell line: primary foreskin fibroblast derived induced pluripotent stem cell line 1";Hebrew University;Genetics;Nissim Benvenisty;GSE21244;RMA signal intensity (log2 based values)
+Sample174;hiPSC line FiPS6-12, passage 14 ENST;human induced pluripotent stem cell line FiPS6-12, passage 14;"cell type: human induced pluripotent stem cell line
+cell line/clone: clone FiPS6-12
+passage: 14
+cell origin: cell line is derived from Human neonatal foreskin fibroblast HFF cell, passage #11";Tampere University of Technology;SGN;;GSE42625;log2 RMA signal
+Sample175;iPS cell line of Human Third Molars 101-cl.5;iPS cell line of Human Third Molars;"cell line: iPS
+cell type: Human third molar";National Institute of Advanced Industrial Science and Technology;Research Institute for Cell Engineering;Tissue Engineering Research Group;GSE16963;Signal
+Sample176;undifferentiated BJ-TERT derived induced pluripotent stem cell line 29;undifferentiated BJ-TERT derived induced pluripotent stem cell line 29;"cell type: Undifferentiated human induced pluripotent stem cells
+genotype: 46(X,Y)
+age: passage 14
+cell line: BJ-TERT derived induced pluripotent stem cell line 29";Hebrew University;Genetics;Nissim Benvenisty;GSE21244;RMA signal intensity (log2 based values)
+Sample177;HiPS-RIKEN-2A (II), biological rep2;HiPS-RIKEN-2A;cell line: HiPS-RIKEN-2A;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
+Sample178;HESC_HD83_p24;Human embryonic stem cell line HD83/FE07-135-L1;"cell line: HD83/FE07-135-L1
+cell type: human embryonic stem cells
+embryo characteristic: normal";University Hospital of Montpellier;Institute for Research in Biotherapy;Microarray Core Facility;GSE15491;MAS5 (GCOS, Affymetrix) signal value
+Sample179;BJ hIPS #6p9 sample 2;human induced pluripotent stem cells, #6 passage nr 9 confluent plate Donor BJ;human induced pluripotent stem cells, #6 passage nr 9 confluent plate Donor BJ;Icahn School of Medicine at Mount Sinai;Neuroscience;Tim D Ahfeldt;GSE12390;signal intensity
+Sample180;HUES 8 p 30 sample 3;human embryonic stem cells HUES 8 p 30;human embryonic stem cells HUES 8 p 30;Icahn School of Medicine at Mount Sinai;Neuroscience;Tim D Ahfeldt;GSE12390;signal intensity
+Sample181;hiPSC line FiPS5-7, passage 10 ENSG;human induced pluripotent stem cell line FiPS5-7, passage 10;"cell type: human induced pluripotent stem cell line
+cell line/clone: clone FiPS5-7
+passage: 10
+cell origin: cell line is derived from Human neonatal foreskin fibroblast HFF cell, passage #11";Tampere University of Technology;SGN;;GSE42625;log2 RMA signal
+Sample182;Human embryonic stem cell line H9;H9;human embryonic stem cell line;UCLA;MCDB;Lowry;GSE9865;signal
+Sample183;iPSCs derived from human cord blood CD34+CD45+ cells, biological rep2 [Primed-CB-hPSC#2P9];iPSCs derived from human cord blood CD34+CD45+ cells;cell type: iPSCs derived from human cord blood CD34+CD45+ cells;McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE95502;Log2 RMA Normalized signal intensity
+Sample184;iPSA_KM_rep1;induced pluripotent stem cells;"gender: male
+cell type: embryonic fibroblasts";Albert Einstein College of medicine;Hematology/Cell biology;Bouhassira;GSE26946;RMA normalized signal intensity
+Sample185;iPSA_p24_rep1;induced pluripotent stem cells;"gender: male
+cell type: embryonic fibroblasts";Albert Einstein College of medicine;Hematology/Cell biology;Bouhassira;GSE26946;RMA normalized signal intensity
+Sample186;Human Induced Pluripotent Stem Cells by Direct Delivery of Reprogramming Proteins (Line 1);human newborn fibroblasts;"cell line: hiPS induced pluripotent embryonic stem cell line (Line 1)
+protocol: direct delivery of reprogramming proteins";McLean Hospital;Molecular neurobiology lab;;GSE16093;Affymetrix MAS5.0 Signal value
+Sample187;iPSC_p19_rep1;induced pluripotent stem cells;"gender: male
+cell type: embryonic fibroblasts";Albert Einstein College of medicine;Hematology/Cell biology;Bouhassira;GSE26946;RMA normalized signal intensity
+Sample188;Human Induced Pluripotent Stem Cells by retroviral transfection of Reprogramming genes;human newborn fibroblasts;"cell line: hiPS induced pluripotent embryonic stem cell line
+protocol: retroviral transfection of reprogramming genes";McLean Hospital;Molecular neurobiology lab;;GSE16093;Affymetrix MAS5.0 Signal value
+Sample189;454E2 (II), biological rep3;4,54E+04;cell line: 4.54E+04;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
+Sample190;06-hIPSC-postEx-p28;Human induced pluripotent stem cells - post-Excision;cell type: Human induced pluripotent stem cells - post-Excision;University of California, Los Angeles;Department of Molecular and Medical Pharmacology;;GSE48830;MAS-5 Signal
+Sample191;undifferentiated H9 Human embryonic stem cells replicate 1;undifferentiated H9 Human embryonic stem cells replicate 1;"cell type: Undifferentiated human embryonic stem cells
+genotype: 46(X,X)
+age: passage 42
+cell line: H9 Human embryonic stem cells";Hebrew University;Genetics;Nissim Benvenisty;GSE21244;RMA signal intensity (log2 based values)
+Sample192;BJ hIPS #5p9 sample 1;human induced pluripotent stem cells, #5 passage nr 9 confluent plate Donor BJ;human induced pluripotent stem cells, #5 passage nr 9 confluent plate Donor BJ;Icahn School of Medicine at Mount Sinai;Neuroscience;Tim D Ahfeldt;GSE12390;signal intensity
+Sample193;ATCC-DYR0103hiPSc (II), biological rep3;ATCC-DYR0105hiPSc;cell line: ATCC-DYR0103hiPSc;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
+Sample194;mRNA_Reprogrammed iPSC line 2;hiPSC line 2 (p54);"cell type: induced pluripotent somatic cells
+cell line: clone line 2
+passages: 54";UCLA;Human Genetics;;GSE16654;RMA-processed signal intensity
+Sample195;undifferentiated H9 Human embryonic stem cells replicate 2;undifferentiated H9 Human embryonic stem cells replicate 2;"cell type: Undifferentiated human embryonic stem cells
+genotype: 46(X,X)
+age: passage 42
+cell line: H9 Human embryonic stem cells";Hebrew University;Genetics;Nissim Benvenisty;GSE21244;RMA signal intensity (log2 based values)
+Sample196;iPSCs derived from human cord blood CD34+CD45+ cells, biological rep5_3;iPSCs derived from human cord blood CD34+CD45+ cells;"somatic source: umbilical cord blood cells (CB)
+cell type: Human induced pluripotent stem cells (hiPSCs)";McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE62066;Log2 RMA Normalized signal intensity
+Sample197;iPSCs derived from human adult dermal fibroblasts, biological rep1_3;iPSCs derived from human adult dermal fibroblasts;"somatic source: adult dermal fibroblasts (Fib)
+cell type: Human induced pluripotent stem cells (hiPSCs)";McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE62066;Log2 RMA Normalized signal intensity
+Sample198;iPSC replicate 1;iPSC cell line;cell type: induced pluripotent stem cells (iPSCs);Taipei Veterans General Hospital;;;GSE96853;Log2 RMA signal intensity
+Sample199;iPSCs derived from human cord blood CD34+CD45+ cells, biological rep1_2;iPSCs derived from human cord blood CD34+CD45+ cells;"somatic source: umbilical cord blood cells (CB)
+cell type: Human induced pluripotent stem cells (hiPSCs)";McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE62066;Log2 RMA Normalized signal intensity
+Sample200;ES-1;ORMES6;cell type: ESC;Academia sinica;Genomic Research center;stem cell;GSE19964;RMA normalized
+Sample201;iPSCs derived from human cord blood CD34+CD45+ cells, biological rep2_1;iPSCs derived from human cord blood CD34+CD45+ cells;"somatic source: umbilical cord blood cells (CB)
+cell type: Human induced pluripotent stem cells (hiPSCs)";McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE62066;Log2 RMA Normalized signal intensity
+Sample202;undifferentiated BJ-TERT derived induced pluripotent stem cell line 28 replicate 1;undifferentiated BJ-TERT derived induced pluripotent stem cell line 28 replicate 1;"cell type: Undifferentiated human induced pluripotent stem cells
+genotype: 46(X,Y)
+age: passage 15
+cell line: BJ-TERT derived induced pluripotent stem cell line 28";Hebrew University;Genetics;Nissim Benvenisty;GSE21244;RMA signal intensity (log2 based values)
+Sample203;Undifferentiated hiPSCs;iPSCs;"cell type: iPSCs generated with Yamanaka 4 factors
+cell line: 201B7";Center for iPS Cell Research and Application;;;GSE43183;log2 RMA signal
+Sample204;08-hESCs-H9-p29;Human embryonic stem cells (H9);"cell type: Human embryonic stem cells (H9)
+cell line: H9";University of California, Los Angeles;Department of Molecular and Medical Pharmacology;;GSE48830;MAS-5 Signal
+Sample205;iPSCs derived from human adult dermal fibroblasts, biological rep2_2;iPSCs derived from human adult dermal fibroblasts;"somatic source: adult dermal fibroblasts (Fib)
+cell type: Human induced pluripotent stem cells (hiPSCs)";McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE62066;Log2 RMA Normalized signal intensity
+Sample206;iPSC from human PBMC (#3);Pluripotent cells derived from human blood cells - de-identified;tissue: Blood DS3-derived iPS clone, expressing 4 reprogramming factors (Klf4, c-Myc, Sox2, and Oct4);Mayo Clinic;;;GSE33536;normalized (global scaling)
+Sample207;HESC_HD129_p6;Human embryonic stem cell line HD129/FE08-005-L1 obtained from a cystic fibrosis embryo;"cell line: HD129/FE08-005-L1
+cell type: human embryonic stem cells
+embryo characteristic: cystic fibrosis";University Hospital of Montpellier;Institute for Research in Biotherapy;Microarray Core Facility;GSE15491;MAS5 (GCOS, Affymetrix) signal value
+Sample208;iPS cell line of HDF cl.8;iPS cell line of HDF;"cell line: iPS
+cell type: HDF";National Institute of Advanced Industrial Science and Technology;Research Institute for Cell Engineering;Tissue Engineering Research Group;GSE16963;Signal
+Sample209;human keratinocyte (SW4)-derived iPSC;Pluripotent cells derived from primary human keratinocytes;tissue: SW4-derived iPS clone, expressing 4 reprogramming factors (Klf4, c-Myc, Sox2, and Oct4);Mayo Clinic;;;GSE33536;normalized (global scaling)
+Sample210;hiPSC line FiPS1-14, passage 13 ENSE;human induced pluripotent stem cell line FiPS1-14, passage 13;"cell type: human induced pluripotent stem cell line
+cell line/clone: clone FiPS1-14
+passage: 13
+cell origin: cell line is derived from Human embryonic lung fibroblast IMR90 cell, passage #14";Tampere University of Technology;SGN;;GSE42625;log2 RMA signal
+Sample211;undifferentiated induced pluripotent stem cell clone 3975.2;undifferentiated induced pluripotent stem cell clone 3975.2;"cell type: Undifferentiated induced pluripotent stem cells
+genotype: 46(X,Y)
+age: passage 9
+cell line: induced pluripotent stem cell clone 3975.2";Hebrew University;Genetics;Nissim Benvenisty;GSE21243;MAS5 signal intensity
+Sample212;mc-iPS (II), biological rep3;mc-iPS;cell line: mc-iPS;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
+Sample213;B200p13-ES;B200 undifferentiated cells;"cell type: Undifferentiated human embryonic stem cells
+genotype: 46(X,X)
+cell line: B200";Hebrew University;Genetics;Nissim Benvenisty;GSE64647;MAS5.0 signal
+Sample214;undifferentiated BJ-TERT derived induced pluripotent stem cell line 28 replicate 1;undifferentiated BJ-TERT derived induced pluripotent stem cell line 28 replicate 1;"cell type: Undifferentiated human induced pluripotent stem cells
+genotype: 46(X,Y)
+age: passage 15
+cell line: BJ-TERT derived induced pluripotent stem cell line 28";Hebrew University;Genetics;Nissim Benvenisty;GSE21244;RMA signal intensity (log2 based values)
+Sample215;hESCs-rep2;human Embryonic Stem Cells;cell type: Embryonic Stem Cells;Guangzhou Biocare Cancer Institude;;;GSE85885;RMA algorithm
+Sample216;AD-specific iPSC7-2;AD-specific iPSC7;"disease state of patient: non-familial Alzheimer's disease
+cell type: human induced pluripotent stem cell (hiPSC)
+clone: 7
+culture type: feeder-free";Prince of Wales Hospital;Clinical Sciences Bld;Stem Cell Lab;GSE31163;Log2-transformed signal intensity
+Sample217;hiPSCs-rep1;human induced Pluripotent Stem Cells;cell type: induced Pluripotent Stem Cells;Guangzhou Biocare Cancer Institude;;;GSE85885;RMA algorithm
+Sample218;undifferentiated primary foreskin fibroblast derived induced pluripotent stem cell line 1;undifferentiated primary foreskin fibroblast derived induced pluripotent stem cell line 1;"cell type: Undifferentiated human induced pluripotent stem cells
+genotype: 46(X,Y)
+age: passage 5
+cell line: primary foreskin fibroblast derived induced pluripotent stem cell line 1";Hebrew University;Genetics;Nissim Benvenisty;GSE21244;RMA signal intensity (log2 based values)
+Sample219;B152_ES;B152 undifferentiated cells;"cell type: Undifferentiated human embryonic stem cells
+genotype: 46(X,X)
+cell line: B152";Hebrew University;Genetics;Nissim Benvenisty;GSE64647;MAS5.0 signal
+Sample220;hiPSC line FiPS5-3, passage 12 ENST;human induced pluripotent stem cell line FiPS5-3, passage 12;"cell type: human induced pluripotent stem cell line
+cell line/clone: clone FiPS5-3
+passage: 12
+cell origin: cell line is derived from Human neonatal foreskin fibroblast HFF cell, passage #11";Tampere University of Technology;SGN;;GSE42625;log2 RMA signal
+Sample221;Human Induced Pluripotent Stem Cells by Direct Delivery of Reprogramming Proteins (Line 2);Human newborn fibroblasts;"cell line: hiPS induced pluripotent embryonic stem cell line (Line 2)
+protocol: direct delivery of reprogramming proteins";McLean Hospital;Molecular neurobiology lab;;GSE16093;Affymetrix MAS5.0 Signal value
+Sample222;AD-specific iPSC7-1;AD-specific iPSC7;"disease state of patient: non-familial Alzheimer's disease
+cell type: human induced pluripotent stem cell (hiPSC)
+clone: 7
+culture type: feeder-free";Prince of Wales Hospital;Clinical Sciences Bld;Stem Cell Lab;GSE31163;Log2-transformed signal intensity
+Sample223;Human umbilical cord blood CD34+CD45+ cells, biological rep1;Human umbilical cord blood CD34+CD45+ cells;cell type: human umbilical cord blood CD34+CD45+ cells;McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE62066;Log2 RMA Normalized signal intensity
+Sample224;undifferentiated primary foreskin fibroblast derived induced pluripotent stem cell line 1;undifferentiated primary foreskin fibroblast derived induced pluripotent stem cell line 1;"cell type: Undifferentiated human induced pluripotent stem cells
+genotype: 46(X,Y)
+age: passage 5
+cell line: primary foreskin fibroblast derived induced pluripotent stem cell line 1";Hebrew University;Genetics;Nissim Benvenisty;GSE21244;RMA signal intensity (log2 based values)
+Sample225;iPSCs derived from human cord blood CD34+CD45+ cells, biological rep2_2;iPSCs derived from human cord blood CD34+CD45+ cells;"somatic source: umbilical cord blood cells (CB)
+cell type: Human induced pluripotent stem cells (hiPSCs)";McMaster University;Stem Cell and Cancer Research Institute (SCC-RI);;GSE62066;Log2 RMA Normalized signal intensity
+Sample226;iPS cell line of HDF cl.1;iPS cell line of HDF;"cell line: iPS
+cell type: HDF";National Institute of Advanced Industrial Science and Technology;Research Institute for Cell Engineering;Tissue Engineering Research Group;GSE16963;Signal
+Sample227;hiPSC line FiPS6-3, passage 14 ENST;human induced pluripotent stem cell line FiPS6-3, passage 14;"cell type: human induced pluripotent stem cell line
+cell line/clone: clone FiPS6-3
+passage: 14
+cell origin: cell line is derived from Human neonatal foreskin fibroblast HFF cell, passage #11";Tampere University of Technology;SGN;;GSE42625;log2 RMA signal
+Sample228;mc-iPS (II), biological rep2;mc-iPS;cell line: mc-iPS;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
+Sample229;iPSC from human PBMC (#1);Pluripotent cells derived from human blood cells - de-identified;tissue: Blood DS1-derived iPS clone, expressing 4 reprogramming factors (Klf4, c-Myc, Sox2, and Oct4);Mayo Clinic;;;GSE33536;normalized (global scaling)
+Sample230;HiPS-RIKEN-1A (II), biological rep2;HiPS-RIKEN-1A;cell line: HiPS-RIKEN-1A;National Institute of Health and Sciences;Division of cell-based therapeutic products;3rd;GSE108566;Signal
